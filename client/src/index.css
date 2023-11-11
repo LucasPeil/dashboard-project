@@ -1,0 +1,111 @@
+/* .centralize{
+    border: 1px solid red;
+    width: calc(100% - 14rem);
+  
+} */
+.icon-shake{
+     animation: shake-icon-animation 0.5s ease-in-out 0.1s; 
+}
+
+@keyframes shake-icon-animation{
+    0%{transform: rotate(0deg);}
+    16%{transform: rotate(5deg);}
+    32%{transform: rotate(-5deg);}
+    48%{transform: rotate(0deg);}
+    64%{transform: rotate(5deg);}
+    80%{transform: rotate(-5deg);}
+    100%{transform: rotate(0deg);}
+}
+
+
+.icon-container{
+    overflow:hidden
+}
+.relatorioButton{
+    position: relative;
+    transition: all 0.2s;
+    background-color: transparent;
+    width: 20%;
+    color: white !important;
+    transition: all 1s ease 
+}
+
+.relatorioButton::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ab63f7;
+    z-index: -1;
+    top:-0.2rem;
+    left:-0.2rem;
+    mix-blend-mode: multiply;
+    transition: all 0.2s;
+    transform-origin: top;
+}
+.relatorioButton::after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #fa6060;
+    z-index: -1;
+    top:0.2rem;
+    left:0.2rem;
+    mix-blend-mode: multiply;
+    transform-origin: bottom;
+    transition: all 0.2s;
+}
+
+.relatorioButton:hover:before{
+    top: -0.4rem;
+    left: 0;
+    transform: perspective(1000px) rotateX(75deg);
+}
+.relatorioButton:hover:after{
+    top: 0.4rem;
+    left: 0;
+    transform: perspective(1000px) rotateX(-75deg);
+}
+
+.relatorioButton:hover{
+    color: black !important;
+    font-weight: bold;
+}
+.buttonLabel:hover::after{
+    font-weight: bold;
+    position: absolute;
+    padding-left: 1rem;
+
+}
+
+/* .icon-container::before{
+  content: "+";
+  font-weight: bolder;
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  width:3.5rem;
+  height: 3.5rem;
+  border: 15px solid #b387e2;
+  position: absolute;
+  border-radius: 0 0% 20% 0%;
+   top: -0rem;
+  left: -0rem; 
+  box-sizing: border-box; 
+
+
+} */
+
+/* .icon-container::after{
+    content: "";
+    width:1rem;
+    height: 1rem;
+    background-color: white;
+    position: absolute;
+    border-radius: 0 10% 20% 10%;
+     top: 1rem;
+    left: 1rem; 
+  
+  
+  } */
