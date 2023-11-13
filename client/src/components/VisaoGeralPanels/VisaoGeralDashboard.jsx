@@ -1,6 +1,4 @@
-// NESTA PAGINA DEIXAR APENAS OS CARDS E O DATA-TABLE-COMPONENT. EM OOUTRA PAGINA DEIXAR O GRAFICO COM AS LISTAGENS DE PRINCIPAIS TAREFAS NO MES ATUAL
-// COLOCAR TODOS OS ELEMENTOS NUM PAPER COM ELEVATION 5 OU 6 E REDUZIDO EM LARGURA, DA MESMA FORMA QUE OS PROJETOS DA CLAM
-import { Grid, Box, Typography, Stack, Button } from "@mui/material";
+import { Grid, Box, Typography, Stack, Button, Paper } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
 import HeaderCards from "../HeaderCards";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
@@ -24,7 +22,8 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 import ModalAtividades from "./ModalAtividades";
 import { useTheme } from "@emotion/react";
-const CasaDashboard = ({ open, setOpen }) => {
+import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
+const VisaoGeralDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -52,7 +51,7 @@ const CasaDashboard = ({ open, setOpen }) => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Domicílio" },
+      title: { display: true, text: "Tempo dedicado a cada tarefa" },
     },
     maintainAspectRatio: false,
   };
@@ -70,31 +69,6 @@ const CasaDashboard = ({ open, setOpen }) => {
     "Out",
     "Nov",
     "Dez",
-  ];
-  const tableColumns = [
-    {
-      name: "Título",
-      selector: (row) => row.title,
-      sortable: true,
-    },
-    {
-      name: "Descrição",
-      selector: (row) => row.descricao,
-      sortable: true,
-    },
-  ];
-
-  const tableData = [
-    {
-      id: 1,
-      title: "Titulo 1",
-      descricao: "Lorem ipsum dolor sit",
-    },
-    {
-      id: 2,
-      title: "Titulo 2",
-      descricao: "Lorem ipsum",
-    },
   ];
 
   const getData = useMemo(() => {
@@ -122,26 +96,6 @@ const CasaDashboard = ({ open, setOpen }) => {
     return data;
   }, []);
 
-  const doughnutData = {
-    labels: [],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 6],
-        backgroundColor: [
-          theme.palette.primary.light,
-          theme.palette.secondary.light,
-          theme.palette.vividRed.light,
-        ],
-        borderColor: [
-          theme.palette.primary.light,
-          theme.palette.secondary.light,
-          theme.palette.vividRed.light,
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -265,39 +219,71 @@ const CasaDashboard = ({ open, setOpen }) => {
           </Grid>
         </Grid>
 
-        <Grid
-          container
+        <Paper
+          elevation={6}
           sx={{
-            px: 4,
-            mt: 5,
+            px: 2,
             boxSizing: "border-box",
+            width: "calc(100% - 4rem)",
+            margin: "2rem auto",
           }}
-          direction={"row"}
-          justifyContent={"space-between"}
-          alignItems={"space-between"}
+          style={{}}
         >
-          <Grid item xs={12}>
-            <Bar options={barOptions} data={getData} height={500} />
-          </Grid>
-        </Grid>
-
-        <Stack sx={{ px: 4, mt: 5 }} direction={"row"} justifyContent={"end"}>
-          <Button
-            sx={{ display: "flex", justifyContent: "space-around" }}
-            onMouseOver={() => setShowArrow(true)}
-            onMouseOut={() => setShowArrow(false)}
-            className="relatorioButton"
+          <Stack
+            direction={"column"}
+            justifyContent={"space-between"}
+            alignItems={"space-between"}
           >
-            <Typography className="buttonLabel">
-              Ver relatório mensal
-            </Typography>
+            <Box
+              sx={{
+                borderBottom: "1px solid #D8D8D8",
+                pb: 1,
+                pt: 3,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                component="h2"
+                sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
+              >
+                VISÃO GERAL
+              </Typography>
+              <ContentPasteSearchOutlinedIcon
+                sx={{ fontSize: "2.5rem", color: "#d8d8d8" }}
+              />
+            </Box>
+            <Box sx={{ px: 2 }}>
+              <Bar options={barOptions} data={getData} height={460} />
+            </Box>
+            <Stack
+              sx={{
+                px: 4,
+                my: 3,
+                zIndex: 20000000000000,
+              }}
+              direction={"row"}
+              justifyContent={"end"}
+            >
+              <Button
+                sx={{ display: "flex", justifyContent: "space-around" }}
+                onMouseOver={() => setShowArrow(true)}
+                onMouseOut={() => setShowArrow(false)}
+                className="relatorioButton"
+              >
+                <Typography className="buttonLabel">
+                  Ver Gastos mensais
+                </Typography>
 
-            {showArrow && <ArrowRightIcon fontSize="medium" />}
-          </Button>
-        </Stack>
+                {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
+              </Button>
+            </Stack>
+          </Stack>
+        </Paper>
       </Box>
     </Box>
   );
 };
 
-export default CasaDashboard;
+export default VisaoGeralDashboard;

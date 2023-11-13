@@ -11,6 +11,7 @@ import FitnessCenterOutlinedIcon from "@mui/icons-material/FitnessCenterOutlined
 import MapsHomeWorkOutlinedIcon from "@mui/icons-material/MapsHomeWorkOutlined";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
+import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 
 const VerticalMenu = ({ open, setOpen }) => {
   const theme = useTheme();
@@ -20,35 +21,16 @@ const VerticalMenu = ({ open, setOpen }) => {
 
   const menus = [
     {
-      title: "EDUCAÇÃO",
+      title: "VISÃO GERAL",
       icon: (
-        <SchoolOutlinedIcon
+        <ContentPasteSearchOutlinedIcon
           fontSize="large"
           sx={{ color: open ? "black" : "white" }}
         />
       ),
-      path: "/educacao",
+      path: "/visao-geral",
     },
-    {
-      title: "SAÚDE",
-      icon: (
-        <FitnessCenterOutlinedIcon
-          fontSize="large"
-          sx={{ color: open ? "black" : "white" }}
-        />
-      ),
-      path: "/saude",
-    },
-    {
-      title: "FINANCEIRO",
-      icon: (
-        <AttachMoneyIcon
-          fontSize="large"
-          sx={{ color: open ? "black" : "white" }}
-        />
-      ),
-      path: "/financeiro",
-    },
+
     {
       title: "CASA",
       icon: (
@@ -68,6 +50,16 @@ const VerticalMenu = ({ open, setOpen }) => {
         />
       ),
       path: "/lazer",
+    },
+    {
+      title: "EDUCAÇÃO",
+      icon: (
+        <SchoolOutlinedIcon
+          fontSize="large"
+          sx={{ color: open ? "black" : "white" }}
+        />
+      ),
+      path: "/educacao",
     },
   ];
 

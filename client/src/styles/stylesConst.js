@@ -2,11 +2,18 @@ export const customStyles = {
   table: {
     style: {
       overflow: "hidden",
+      minHeight: "40vh",
     },
   },
   rows: {
     style: {
       fontSize: "16px",
+    },
+  },
+  subHeader: {
+    style: {
+      minHeight: "52px",
+      padding: "0px",
     },
   },
   headCells: {

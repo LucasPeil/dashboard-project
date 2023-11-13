@@ -72,13 +72,19 @@
     color: black !important;
     font-weight: bold;
 }
+.buttonLabel{
+    font-weight: bold !important;
+}
 .buttonLabel:hover::after{
-    font-weight: bold;
+    
     position: absolute;
     padding-left: 1rem;
 
 }
-
+.table{
+    min-height: 50vh;
+    border: 1px solid red;
+}
 /* .icon-container::before{
   content: "+";
   font-weight: bolder;

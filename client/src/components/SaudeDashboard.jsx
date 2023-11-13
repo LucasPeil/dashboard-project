@@ -1,24 +1,31 @@
 import React from "react";
 
 const SaudeDashboard = () => {
-  return {
-    /* <Grid sx={{ position: "relative" }} item xs={8}>
-  <DataTable
-    columns={tableColumns}
-    data={tableData}
-    customStyles={customStyles}
-    striped
-    pagination
-    paginationServer
-    paginationComponentOptions={{
-      rowsPerPageText: "Itens por página",
-      rangeSeparatorText: "de",
-      selectAllRowsItem: true,
-      selectAllRowsItemText: "Todos",
-    }}
-  />
-</Grid> */
-  };
+  /* 
+
+     */
+
+  /*   const doughnutData = {
+    labels: [],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [12, 19, 6],
+        backgroundColor: [
+          theme.palette.primary.light,
+          theme.palette.secondary.light,
+          theme.palette.vividRed.light,
+        ],
+        borderColor: [
+          theme.palette.primary.light,
+          theme.palette.secondary.light,
+          theme.palette.vividRed.light,
+        ],
+        borderWidth: 1,
+      },
+    ],
+  }; */
+  return {};
   {
     /* <Grid
   sx={{
