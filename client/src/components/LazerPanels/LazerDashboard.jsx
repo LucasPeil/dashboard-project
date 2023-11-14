@@ -1,27 +1,23 @@
-import { Grid, Box, Typography, Stack, Button, Paper } from "@mui/material";
-import React, { useEffect, useState, useMemo } from "react";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
+import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-import DataTable from "react-data-table-component";
-import { customStyles } from "../../styles/stylesConst";
-import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import {
-  Chart as ChartJS,
   ArcElement,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+import DataTable from "react-data-table-component";
+import { customStyles } from "../../styles/stylesConst";
 
 import { useTheme } from "@emotion/react";
-import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import SearchBar from "../SearchBar";
+import CategoryCards from "../CategoryCards";
 const LazerDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
@@ -122,6 +118,29 @@ const LazerDashboard = ({ open, setOpen }) => {
               />
             </Box>
           </Stack>
+          <Stack direction={"row"} spacing={2} sx={{ mt: 7, mb: 2 }}>
+            <CategoryCards
+              qty={32}
+              title="Arte"
+              description={"Descrição qualquer..."}
+            />
+            <CategoryCards
+              qty={32}
+              title="Cultura"
+              description={"Descrição qualquer..."}
+            />
+            <CategoryCards
+              qty={32}
+              title="Em grupo"
+              description={"Descrição qualquer..."}
+            />
+            <CategoryCards
+              qty={32}
+              title="Outros"
+              description={"Descrição qualquer..."}
+            />
+          </Stack>
+
           <Grid container>
             <Grid
               sx={{
