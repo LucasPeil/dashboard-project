@@ -5,12 +5,17 @@ const path = require("path");
 const dotenv = require("dotenv").config();
 const bodyParser = require("body-parser");
 const errorHandler = require("./middlewares/errorHandler");
+const connectDb = require("./db");
+
 const PORT = process.env.PORT || 5030;
+
+connectDb();
 app.use(cors());
 
 app.use(bodyParser.json());
 
-app.use("/api/atividadesCasa", require("./routes/atividadesCasaRoutes"));
+app.use("/api/atividades-casa", require("./routes/atividadesCasaRoutes"));
+app.use("/api/visaoGeral", require("./routes/visaoGeralRoutes"));
 
 app.use(errorHandler);
 

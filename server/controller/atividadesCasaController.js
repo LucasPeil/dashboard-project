@@ -27,23 +27,23 @@ const getSingleAtividade = asyncHandler(async (req, res) => {
 const setNewAtividadeCasa = asyncHandler(async (req, res) => {
   const { data } = req.body;
 
-  let atividade;
+  let atividadeCasa;
   let message;
 
   if (data._id) {
-    atividade = await AtividadesCasa.findById(data._id);
-    atividade.$set(data);
-    atividade = await atividade.save();
+    atividadeCasa = await AtividadesCasa.findById(data._id);
+    atividadeCasa.$set(data);
+    atividadeCasa = await atividadeCasa.save();
     message = "Aividade atualizada com sucesso.";
   } else {
     delete data._id;
-    atividade = new AtividadesCasa(casa);
-    atividade = await atividade.save();
+    atividadeCasa = new AtividadesCasa(casa);
+    atividadeCasa = await atividadeCasa.save();
     message = "Aividade registrada com sucesso.";
   }
 
-  if (atividade) {
-    res.status(201).json(atividade);
+  if (atividadeCasa) {
+    res.status(201).json(atividadeCasa);
   } else {
     res.status(400);
     throw new Error("Erro ao inserir dados");

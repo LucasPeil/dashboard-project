@@ -3,6 +3,7 @@ import React from "react";
 import { useSpring, animated } from "@react-spring/web";
 import "../index.css";
 import { useTheme } from "@emotion/react";
+import { addCoverEffect, removeCoverEffect } from "../../utils/coverFunction";
 
 const HeaderCards = ({
   title,
@@ -13,6 +14,10 @@ const HeaderCards = ({
   borderStyle,
   className_,
   containerDecoration,
+  backgroundColor,
+  index,
+  setShowAddIcon,
+  showAddIcon,
 }) => {
   const theme = useTheme();
   const props = useSpring({
@@ -27,17 +32,30 @@ const HeaderCards = ({
   const iconAnimationEnd = () => {
     Array.from(headerIcons)[idx].classList.remove("icon-shake");
   };
+
   return (
     <Paper
-      onMouseOver={() => iconAnimation(idx)}
-      onMouseOut={() => iconAnimationEnd()}
+      onMouseOver={() => {
+        iconAnimation(idx);
+        addCoverEffect(index);
+        let showAddIconCopy = [...showAddIcon];
+        showAddIconCopy.splice(index, 1, false);
+        setShowAddIcon(showAddIconCopy);
+      }}
+      onMouseOut={() => {
+        iconAnimationEnd();
+        removeCoverEffect(index);
+        let showAddIconCopy = [...showAddIcon];
+        showAddIconCopy.splice(index, 1, true);
+        setShowAddIcon(showAddIconCopy);
+      }}
       elevation={4}
       sx={{
         position: "relative",
         mt: 5,
         mx: 4,
         height: "11rem",
-        borderRadius: "0.25rem",
+        borderRadius: "1rem",
         boxSizing: "border-box",
         px: "2.5rem",
         cursor: "pointer",
@@ -46,14 +64,11 @@ const HeaderCards = ({
         justifyContent: "center",
         transition: "all 0.4s ease ",
         overflow: "hidden",
-        border: borderStyle,
-        /* backgroundColor: "#4fb98b",
-        color: "white", */
-
+        /*   color: "white",  */
         "&:hover": {
           // backgroundColor: theme.palette.vividBlue.main,
-          // color: "white",
-          // transform: "scale(105%)",
+          color: "white",
+          transform: "scale(105%)",
         },
       }}
     >

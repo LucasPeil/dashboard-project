@@ -9,6 +9,10 @@ const atividadesEducacaoSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  dinheiroGasto: {
+    type: Number,
+    required: false,
+  },
   descricaoAtividade: {
     type: String,
     required: false,

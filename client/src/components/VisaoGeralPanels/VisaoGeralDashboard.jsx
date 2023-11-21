@@ -8,6 +8,7 @@ import DataTable from "react-data-table-component";
 import { customStyles } from "../../styles/stylesConst";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import "../../index.css";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -78,17 +79,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
         {
           label: "Dataset 1",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: "#0c264e",
         },
         {
           label: "Dataset 2",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-          backgroundColor: theme.palette.secondary.light,
+          backgroundColor: "#f4b26a",
         },
         {
           label: "Dataset 3",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-          backgroundColor: theme.palette.vividRed.light,
+          backgroundColor: "#648d64",
         },
       ],
     };
@@ -99,6 +100,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const [showAddIcon, setShowAddIcon] = useState([true, true, true]);
   // 15 30 20 10
   return (
     <Box sx={{ display: "flex", justifyContent: "end" }}>
@@ -123,14 +125,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 icon={<HomeOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
                 className_={"icon-container"}
-                borderStyle={"7px solid #b387e2"}
+                index="0"
+                setShowAddIcon={setShowAddIcon}
+                showAddIcon={showAddIcon}
                 containerDecoration={
                   <Box
+                    id="0"
                     component={"span"}
                     sx={{
                       position: "absolute",
                       color: "white",
-                      backgroundColor: " #b387e2",
+                      backgroundColor: " #0c264e",
                       top: "-3.5rem",
                       left: "-0.8rem",
                       width: "4rem",
@@ -139,10 +144,13 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      borderRadius: "50%",
+                      transition:
+                        " width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ",
                     }}
                   >
                     <Box sx={{ transform: "rotate(320deg)", ml: 1 }}>
-                      <AddToPhotosIcon />
+                      {showAddIcon[0] && <AddToPhotosIcon />}
                     </Box>
                   </Box>
                 }
@@ -157,14 +165,18 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 content={"LAZER"}
                 icon={<CelebrationOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
-                borderStyle={"7px solid #FDDC88"}
+                index="1"
+                setShowAddIcon={setShowAddIcon}
+                showAddIcon={showAddIcon}
                 containerDecoration={
                   <Box
+                    id="1"
                     component={"span"}
                     sx={{
                       position: "absolute",
                       color: "white",
-                      backgroundColor: " #FDDC88",
+                      backgroundColor: "#f4b26a",
+                      borderRadius: "50%",
                       top: "-3.5rem",
                       left: "-0.8rem",
                       width: "4rem",
@@ -173,10 +185,12 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      transition:
+                        " width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ",
                     }}
                   >
                     <Box sx={{ transform: "rotate(320deg)", ml: 1 }}>
-                      <AddToPhotosIcon />
+                      {showAddIcon[1] && <AddToPhotosIcon />}
                     </Box>
                   </Box>
                 }
@@ -191,14 +205,18 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 content={"EDUCAÇÃO"}
                 icon={<SchoolOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
-                borderStyle={"7px solid #FA8282"}
+                index="2"
+                setShowAddIcon={setShowAddIcon}
+                showAddIcon={showAddIcon}
                 containerDecoration={
                   <Box
+                    id="2"
                     component={"span"}
                     sx={{
                       position: "absolute",
                       color: "white",
-                      backgroundColor: " #FA8282",
+                      backgroundColor: "#648d64",
+                      borderRadius: "50%",
                       top: "-3.5rem",
                       left: "-0.8rem",
                       width: "4rem",
@@ -207,10 +225,12 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      transition:
+                        " width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ",
                     }}
                   >
                     <Box sx={{ transform: "rotate(320deg)", ml: 1 }}>
-                      <AddToPhotosIcon />
+                      {showAddIcon[2] && <AddToPhotosIcon />}
                     </Box>
                   </Box>
                 }
@@ -226,6 +246,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
             boxSizing: "border-box",
             width: "calc(100% - 4rem)",
             margin: "2rem auto",
+            minHeight: "70vh",
           }}
           style={{}}
         >
@@ -261,13 +282,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
               sx={{
                 px: 4,
                 my: 3,
+                mb: 5,
                 zIndex: 20000000000000,
               }}
               direction={"row"}
               justifyContent={"end"}
             >
               <Button
-                sx={{ display: "flex", justifyContent: "space-around" }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                }}
                 onMouseOver={() => setShowArrow(true)}
                 onMouseOut={() => setShowArrow(false)}
                 className="relatorioButton"

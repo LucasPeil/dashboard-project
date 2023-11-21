@@ -23,11 +23,12 @@
 }
 .relatorioButton{
     position: relative;
-    transition: all 0.2s;
+    transition: all 0.2s ease-in-out;
     background-color: transparent;
     width: 20%;
-    color: white !important;
-    transition: all 1s ease 
+    color: black !important;
+    transition: all 1s ease ;
+    
 }
 
 .relatorioButton::before{
@@ -35,41 +36,42 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #ab63f7;
-    z-index: -1;
-    top:-0.2rem;
-    left:-0.2rem;
-    mix-blend-mode: multiply;
-    transition: all 0.2s;
-    transform-origin: top;
+    border-top: 2px solid #4b5a50;
+    border-bottom: 2px solid #4b5a50;
+   /*  transform: scaleY(2); */
+    top:0rem;
+    left:0rem;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    
+
 }
 .relatorioButton::after{
     content: "";
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #fa6060;
+    background-color: #4b5a50;
+    transform: scale(0);
     z-index: -1;
-    top:0.2rem;
-    left:0.2rem;
-    mix-blend-mode: multiply;
-    transform-origin: bottom;
-    transition: all 0.2s;
+    top:2px;
+    left:0;
+    transition: all 0.2s ease-in-out 0.2s;
+    
+
 }
 
 .relatorioButton:hover:before{
-    top: -0.4rem;
-    left: 0;
-    transform: perspective(1000px) rotateX(75deg);
+  transform: scale(1);
+  opacity: 1;
 }
 .relatorioButton:hover:after{
-    top: 0.4rem;
-    left: 0;
-    transform: perspective(1000px) rotateX(-75deg);
+    transform: scale(1);
+  opacity: 1;
 }
 
 .relatorioButton:hover{
-    color: black !important;
+    color:white!important;
     font-weight: bold;
 }
 .buttonLabel{
@@ -85,33 +87,46 @@
     min-height: 50vh;
     border: 1px solid red;
 }
-/* .icon-container::before{
-  content: "+";
-  font-weight: bolder;
-  font-size: 2.5rem;
-  display: flex;
-  justify-content: center;
-  width:3.5rem;
-  height: 3.5rem;
-  border: 15px solid #b387e2;
-  position: absolute;
-  border-radius: 0 0% 20% 0%;
-   top: -0rem;
-  left: -0rem; 
-  box-sizing: border-box; 
-
-
-} */
-
-/* .icon-container::after{
+.coverEffect{
+    /* transform: rotate(300deg) !important; */
+    height:32rem !important;
+    width:32rem !important;
+      top: -7.5rem !important;
+    left: -2.5rem !important; 
+    z-index: -2; 
+   
+}
+.category-banner::before{
     content: "";
-    width:1rem;
-    height: 1rem;
-    background-color: white;
+    background-color: var(--banner-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    border-radius: 0 10% 20% 10%;
-     top: 1rem;
-    left: 1rem; 
-  
-  
-  } */
+    top: 0.4rem;
+    left: -0.65rem;
+    width: 10rem;
+    height: 2rem;
+    z-index: 1;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem; 
+
+    
+}
+
+.category-banner::after{
+    content: "";
+    width: 1.8rem;
+    height: 1.8rem;
+    position: absolute;
+    top: 1.5rem;
+    left: -0.25rem;
+    transform: rotate(45deg);
+     z-index: -1; 
+    background-color: rgb(230, 170, 106);
+}
+
+
+ 
+

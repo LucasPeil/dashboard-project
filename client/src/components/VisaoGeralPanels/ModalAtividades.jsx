@@ -12,11 +12,12 @@ import {
   TextField,
   Stack,
   IconButton,
+  InputAdornment,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import React, { forwardRef } from "react";
-import { Unstable_NumberInput as BaseNumberInput } from "@mui/base/Unstable_NumberInput";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import {
   Field,
@@ -27,23 +28,13 @@ import {
   FieldArray,
   useFormik,
 } from "formik";
+import { setNewAtividadeCasa } from "../../features/casa/casaSlice";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
 
 const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-
-    width: 600,
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
-  };
-
+  const dispatch = useDispatch();
   const ValidationSchema = Yup.object({
     nomeAtividade: Yup.string()
       .trim()
@@ -64,15 +55,14 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      nomeAtividade: data?.nomeAtividade ? data?.nomeAtividade : "",
-      tempoGasto: data?.tempoGasto ? data?.tempoGasto : "",
-      descricaoAtividade: data?.descricaoAtividade
-        ? data?.descricaoAtividade
-        : "",
+      nomeAtividade: data?.nomeAtividade || "",
+      tempoGasto: data?.tempoGasto || "",
+      dinheiroGasto: data?.dinheiroGasto || data,
+      descricaoAtividade: data?.descricaoAtividade || "",
     },
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(setNewAtividadeCasa(values));
     },
   });
 
@@ -110,10 +100,29 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
               style={{ marginTop: 30, marginBottom: 30 }}
             />
             <Field
+              {...formik.getFieldProps("dinheiroGasto")}
+              as={TextField}
+              type="number"
+              startAdorments={
+                <InputAdornment position="start">$</InputAdornment>
+              }
+              InputProps={{
+                inputProps: { min: 0 },
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+              label="Dinheiro gasto nesta tarefa"
+              variant="standard"
+              fullWidth
+              helperText="* Em Reais"
+              style={{ marginTop: 30, marginBottom: 30 }}
+            />
+            <Field
               {...formik.getFieldProps("tempoGasto")}
               as={TextField}
               type="number"
-              InputProps={{ inputProps: { min: 0, max: 10 } }}
+              InputProps={{ inputProps: { min: 0 } }}
               label="Tempo a ser dedicado a esta tarefa"
               variant="standard"
               fullWidth

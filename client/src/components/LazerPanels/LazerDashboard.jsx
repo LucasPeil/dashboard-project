@@ -1,7 +1,10 @@
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
+import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 import {
   ArcElement,
   BarElement,
@@ -80,6 +83,7 @@ const LazerDashboard = ({ open, setOpen }) => {
         }}
       >
         <Paper
+          /* onMouseOver={() => coverEffect()} */
           elevation={6}
           sx={{
             px: 2,
@@ -118,26 +122,70 @@ const LazerDashboard = ({ open, setOpen }) => {
               />
             </Box>
           </Stack>
-          <Stack direction={"row"} spacing={2} sx={{ mt: 7, mb: 2 }}>
+          <Stack
+            direction={"row"}
+            spacing={10}
+            sx={{ mt: 7, mb: 2, mx: 2, position: "relative", zIndex: 10 }}
+          >
             <CategoryCards
               qty={32}
-              title="Arte"
+              title="Jogos"
               description={"Descrição qualquer..."}
+              bgcolor={"#f4b26a"}
+              icon={
+                <SportsEsportsOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    fontSize: "1.2rem",
+                    ml: 2,
+                  }}
+                />
+              }
             />
             <CategoryCards
               qty={32}
               title="Cultura"
               description={"Descrição qualquer..."}
+              bgcolor={"#f4b26a"}
+              icon={
+                <BookOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    fontSize: "1.2rem",
+                    ml: 2,
+                  }}
+                />
+              }
             />
             <CategoryCards
               qty={32}
               title="Em grupo"
               description={"Descrição qualquer..."}
+              bgcolor={"#f4b26a"}
+              icon={
+                <GroupsOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    fontSize: "1.2rem",
+                    ml: 2,
+                  }}
+                />
+              }
             />
             <CategoryCards
               qty={32}
               title="Outros"
               description={"Descrição qualquer..."}
+              bgcolor={"#f4b26a"}
+              icon={
+                <CelebrationOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    fontSize: "1.2rem",
+                    ml: 2,
+                  }}
+                />
+              }
             />
           </Stack>
 

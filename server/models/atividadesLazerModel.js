@@ -17,6 +17,10 @@ const atividadesLazerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dinheiroGasto: {
+    type: Number,
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("AtividadesLazer", atividadesLazerSchema);
