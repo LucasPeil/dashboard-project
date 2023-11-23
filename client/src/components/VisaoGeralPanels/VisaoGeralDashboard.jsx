@@ -21,7 +21,7 @@ import {
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
-import ModalAtividades from "./ModalAtividades";
+import ModalAtividadesCasa from "../CasaPanels/ModalAtividadesCasa";
 import { useTheme } from "@emotion/react";
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 const VisaoGeralDashboard = ({ open, setOpen }) => {
@@ -104,7 +104,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   // 15 30 20 10
   return (
     <Box sx={{ display: "flex", justifyContent: "end" }}>
-      <ModalAtividades
+      <ModalAtividadesCasa
         openModal={openModal}
         handleCloseModal={handleCloseModal}
       />

@@ -3,11 +3,18 @@ import React from "react";
 import { useTheme } from "@emotion/react";
 import PaletteIcon from "@mui/icons-material/Palette";
 
-const CategoryCards = ({ qty, title, description, bgcolor, icon }) => {
+const CategoryCards = ({
+  qty,
+  title,
+  description,
+  bgcolor,
+  icon,
+  classLabel,
+}) => {
   const theme = useTheme();
   return (
     <Paper
-      className="category-banner"
+      className={classLabel}
       style={{ "--banner-color": bgcolor }}
       elevation={5}
       sx={{

@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const atividadesCasaSchema = new mongoose.Schema({
   nomeAtividade: {
     type: String,
-    required: true,
+    required: false,
   },
   tempoGasto: {
     type: Number,
-    required: true,
+    required: false,
   },
   dinheiroGasto: {
     type: Number,

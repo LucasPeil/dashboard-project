@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const path = require("path");
 const dotenv = require("dotenv").config();
 const bodyParser = require("body-parser");
@@ -10,12 +9,22 @@ const connectDb = require("./db");
 const PORT = process.env.PORT || 5030;
 
 connectDb();
+const app = express();
 app.use(cors());
-
 app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    parameterLimit: 100000,
+    limit: "50mb",
+    extended: true,
+  })
+);
+app.use("/teste", (req, res) => {
+  res.status(200).send("Testando");
+});
 
 app.use("/api/atividades-casa", require("./routes/atividadesCasaRoutes"));
-app.use("/api/visaoGeral", require("./routes/visaoGeralRoutes"));
+//app.use("/api/visaoGeral", require("./routes/visaoGeralRoutes"));
 
 app.use(errorHandler);
 

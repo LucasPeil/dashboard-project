@@ -1,10 +1,10 @@
-import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
-import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
-import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
+import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
+import RamenDiningOutlinedIcon from "@mui/icons-material/RamenDiningOutlined";
+import LocalLaundryServiceOutlinedIcon from "@mui/icons-material/LocalLaundryServiceOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import { Box, Grid, IconButton, Paper, Stack, Typography } from "@mui/material";
 import {
   ArcElement,
   BarElement,
@@ -15,13 +15,19 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../styles/stylesConst";
-
+import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
-import SearchBar from "../SearchBar";
 import CategoryCards from "../CategoryCards";
-const LazerDashboard = ({ open }) => {
+import SearchBar from "../SearchBar";
+import {
+  getAllAtividadesCasa,
+  removeSingleAtividde,
+} from "../../features/casa/casaSlice";
+import SingleAtividade from "./SingleAtividade";
+const CasaDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -30,52 +36,65 @@ const LazerDashboard = ({ open }) => {
     Tooltip,
     Legend
   );
-
+  const dispatch = useDispatch();
+  const { atividadesCasa, remove } = useSelector(
+    (state) => state.atividadesCasa
+  );
   ChartJS.register(ArcElement, Tooltip, Legend);
-  const [imageToDisplay, setImageToDisplay] = useState();
+
   const theme = useTheme();
-  const [showArrow, setShowArrow] = useState(false);
-  useEffect(() => {
-    fetch("../assets/inspiracao1")
-      .then(function (response) {
-        return response.blob();
-      })
-      .then(function (blob) {
-        setImageToDisplay(blob);
-      });
-  }, []);
 
   const tableColumns = [
     {
-      name: "Título",
-      selector: (row) => row.title,
+      name: "Nome da atividade",
+      selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
       name: "Descrição",
-      selector: (row) => row.descricao,
+      selector: (row) => row.descricaoAtividade,
       sortable: true,
     },
-  ];
-  const tableData = [
+
     {
-      id: 1,
-      title: "Titulo 1",
-      descricao: "Lorem ipsum dolor sit",
-    },
-    {
-      id: 2,
-      title: "Titulo 2",
-      descricao: "Lorem ipsum",
+      name: "Ações",
+      selector: (row) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton>
+            <EditTwoToneIcon color="success" />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(removeSingleAtividde(row._id));
+              console.log(row._id);
+            }}
+          >
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
+        </Box>
+      ),
     },
   ];
 
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  // 15 30 20 10
+  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
+  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
+  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
+  const [selectedRow, setSelectedRow] = useState();
+  useEffect(() => {
+    dispatch(getAllAtividadesCasa());
+  }, [remove.isSuccess]);
+
   return (
     <Box sx={{ display: "flex", justifyContent: "end" }}>
+      {/* MODAL SINGLE ATIVIDADE */}
+      {openSingleAtividade && (
+        <SingleAtividade
+          rowData={selectedRow}
+          openSingleAtividade={openSingleAtividade}
+          handleCloseSingleAtividade={handleCloseSingleAtividade}
+        />
+      )}
+
       <Box
         sx={{
           transition: "all 0.5s ease",
@@ -114,27 +133,32 @@ const LazerDashboard = ({ open }) => {
                 component="h2"
                 sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
               >
-                DETALHES SOBRE SEU LAZER
+                DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS
               </Typography>
 
-              <CelebrationOutlinedIcon
-                sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
-              />
+              <HomeOutlinedIcon sx={{ fontSize: "3.1rem", color: "#d8d8d8" }} />
             </Box>
           </Stack>
           <Stack
             direction={"row"}
             spacing={10}
-            sx={{ mt: 7, mb: 2, mx: 2, position: "relative", zIndex: 10 }}
+            sx={{
+              mt: 7,
+              mb: 2,
+              mx: 2,
+              position: "relative",
+              zIndex: 10,
+              width: "70%",
+            }}
           >
             <CategoryCards
-              classLabel="category-banner"
+              classLabel="category-banner-casa"
               qty={32}
-              title="Jogos"
+              title="Compras"
               description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
+              bgcolor={"#0c264e"}
               icon={
-                <SportsEsportsOutlinedIcon
+                <ShoppingBasketOutlinedIcon
                   sx={{
                     position: "absolute",
                     fontSize: "1.2rem",
@@ -144,13 +168,13 @@ const LazerDashboard = ({ open }) => {
               }
             />
             <CategoryCards
-              classLabel="category-banner"
+              classLabel="category-banner-casa"
               qty={32}
-              title="Cultura"
+              title="Limpeza"
               description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
+              bgcolor={"#0c264e"}
               icon={
-                <BookOutlinedIcon
+                <LocalLaundryServiceOutlinedIcon
                   sx={{
                     position: "absolute",
                     fontSize: "1.2rem",
@@ -160,29 +184,13 @@ const LazerDashboard = ({ open }) => {
               }
             />
             <CategoryCards
-              classLabel="category-banner"
+              classLabel="category-banner-casa"
               qty={32}
-              title="Em grupo"
+              title="Refeições"
               description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
+              bgcolor={"#0c264e"}
               icon={
-                <GroupsOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Outros"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <CelebrationOutlinedIcon
+                <RamenDiningOutlinedIcon
                   sx={{
                     position: "absolute",
                     fontSize: "1.2rem",
@@ -221,13 +229,18 @@ const LazerDashboard = ({ open }) => {
             <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
               <DataTable
                 columns={tableColumns}
-                data={tableData}
+                data={atividadesCasa}
                 customStyles={customStyles}
                 subHeader
                 subHeaderComponent={<SearchBar />}
                 striped
                 pagination
                 paginationServer
+                pointerOnHover
+                onRowClicked={(row) => {
+                  setOpenSingleAtividade(true);
+                  setSelectedRow(row);
+                }}
                 paginationComponentOptions={{
                   rowsPerPageText: "Itens por página",
                   rangeSeparatorText: "de",
@@ -237,33 +250,10 @@ const LazerDashboard = ({ open }) => {
               />
             </Grid>
           </Grid>
-
-          {/*  <Stack
-              sx={{
-                px: 4,
-                my: 3,
-                zIndex: 20000000000000,
-              }}
-              direction={"row"}
-              justifyContent={"end"}
-            >
-                   <Button
-                sx={{ display: "flex", justifyContent: "space-around" }}
-                onMouseOver={() => setShowArrow(true)}
-                onMouseOut={() => setShowArrow(false)}
-                className="relatorioButton"
-              >
-                <Typography className="buttonLabel">
-                  Ver Gastos mensais
-                </Typography>
-
-                {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
-              </Button> 
-            </Stack> */}
         </Paper>
       </Box>
     </Box>
   );
 };
 
-export default LazerDashboard;
+export default CasaDashboard;

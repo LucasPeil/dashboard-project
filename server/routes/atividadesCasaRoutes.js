@@ -7,7 +7,7 @@ const {
   setNewAtividadeCasa,
   deleteAtividade,
 } = require("../controller/atividadesCasaController");
-router.route("/").post(setNewAtividadeCasa);
+router.route("/newAtividade").post(setNewAtividadeCasa);
 router.route("/").get(getAllAtividadesCasa);
 router.route("/:id").get(getSingleAtividade).delete(deleteAtividade);
 

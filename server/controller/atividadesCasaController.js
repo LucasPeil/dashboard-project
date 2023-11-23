@@ -20,12 +20,13 @@ const getSingleAtividade = asyncHandler(async (req, res) => {
     res.status(200).json(atividade);
   } else {
     res.status(404);
-    throw new Error("Erro ao recuperar atividade");
+    throw new Error("Erro ao inserir dados");
   }
 });
 
 const setNewAtividadeCasa = asyncHandler(async (req, res) => {
-  const { data } = req.body;
+  console.log("Dados recebidos no servidor:", req.body);
+  const data = JSON.parse(req.body.data);
 
   let atividadeCasa;
   let message;
@@ -37,7 +38,7 @@ const setNewAtividadeCasa = asyncHandler(async (req, res) => {
     message = "Aividade atualizada com sucesso.";
   } else {
     delete data._id;
-    atividadeCasa = new AtividadesCasa(casa);
+    atividadeCasa = new AtividadesCasa(data);
     atividadeCasa = await atividadeCasa.save();
     message = "Aividade registrada com sucesso.";
   }

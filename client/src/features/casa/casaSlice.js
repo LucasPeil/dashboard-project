@@ -28,21 +28,70 @@ const initialState = {
 };
 
 export const setNewAtividadeCasa = createAsyncThunk(
-  "atividadeCasa/set",
+  "atividadeCasa/post",
   async (data, thunkAPI) => {
     try {
-      const response = await casaService.setNewAtividadeCasa(data);
-    } catch (err) {
+      return await casaService.setNewAtividadeCasa(data);
+    } catch (error) {
       const message =
-        (err.response && err.response.data && err.response.data.message) ||
-        err.message ||
-        err.toString();
-
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getAllAtividadesCasa = createAsyncThunk(
+  "atividadesCasa/getAll",
+  async (thunkAPI) => {
+    try {
+      return await casaService.getAllAtividadesCasa();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+export const getSingleAtividade = createAsyncThunk(
+  "atividadesCasa/singleAtividade",
+  async (id, thunkAPI) => {
+    try {
+      return await casaService.getSingleAtividade(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const removeSingleAtividde = createAsyncThunk(
+  "atividadesCasa/remove",
+  async (id, thunkAPI) => {
+    try {
+      return await casaService.removeSingleAtividade(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const casaSlice = createSlice({
   name: "casaSlice",
   initialState,
@@ -77,7 +126,7 @@ export const casaSlice = createSlice({
         state.register.isLoading = false;
         state.register.isError = false;
         state.register.isSuccess = true;
-        state.atividadeCasa = action.payload.atividadeCasa;
+        state.atividadeCasa = action.payload;
         state.atividadesCasa.unshift(state.atividadeCasa);
       })
       .addCase(setNewAtividadeCasa.rejected, (state, action) => {
@@ -85,6 +134,59 @@ export const casaSlice = createSlice({
         state.register.isSuccess = false;
         state.register.isError = true;
         state.message = action.payload;
+      })
+      .addCase(getAllAtividadesCasa.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getAllAtividadesCasa.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.atividadesCasa = action.payload;
+      })
+      .addCase(getAllAtividadesCasa.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      .addCase(getSingleAtividade.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getSingleAtividade.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.atividadeCasa = action.payload;
+      })
+      .addCase(getSingleAtividade.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(removeSingleAtividde.pending, (state) => {
+        state.remove.isLoading = true;
+        state.remove.isError = false;
+        state.remove.isSuccess = false;
+      })
+      .addCase(removeSingleAtividde.fulfilled, (state, action) => {
+        state.remove.isLoading = false;
+        state.remove.isError = false;
+        state.remove.isSuccess = true;
+        state.atividadesCasa = state.atividadesCasa.filter(
+          (atividade) => atividade._id !== action.payload._id
+        );
+      })
+      .addCase(removeSingleAtividde.rejected, (state, action) => {
+        state.remove.isLoading = false;
+        state.remove.isSuccess = false;
+        state.remove.isError = true;
       });
   },
 });

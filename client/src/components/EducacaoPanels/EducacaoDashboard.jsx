@@ -1,10 +1,10 @@
-import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import RamenDiningOutlinedIcon from "@mui/icons-material/RamenDiningOutlined";
+import LocalLaundryServiceOutlinedIcon from "@mui/icons-material/LocalLaundryServiceOutlined";
+import CastForEducationOutlinedIcon from "@mui/icons-material/CastForEducationOutlined";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
+
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
-import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
-import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 import {
   ArcElement,
   BarElement,
@@ -15,13 +15,14 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../styles/stylesConst";
 
 import { useTheme } from "@emotion/react";
-import SearchBar from "../SearchBar";
 import CategoryCards from "../CategoryCards";
-const LazerDashboard = ({ open }) => {
+import SearchBar from "../SearchBar";
+const EducacaoDashboard = ({ open }) => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -32,18 +33,8 @@ const LazerDashboard = ({ open }) => {
   );
 
   ChartJS.register(ArcElement, Tooltip, Legend);
-  const [imageToDisplay, setImageToDisplay] = useState();
+
   const theme = useTheme();
-  const [showArrow, setShowArrow] = useState(false);
-  useEffect(() => {
-    fetch("../assets/inspiracao1")
-      .then(function (response) {
-        return response.blob();
-      })
-      .then(function (blob) {
-        setImageToDisplay(blob);
-      });
-  }, []);
 
   const tableColumns = [
     {
@@ -114,10 +105,10 @@ const LazerDashboard = ({ open }) => {
                 component="h2"
                 sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
               >
-                DETALHES SOBRE SEU LAZER
+                DETALHES SOBRE SUA EDUCAÇÃO
               </Typography>
 
-              <CelebrationOutlinedIcon
+              <SchoolOutlinedIcon
                 sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
               />
             </Box>
@@ -125,16 +116,23 @@ const LazerDashboard = ({ open }) => {
           <Stack
             direction={"row"}
             spacing={10}
-            sx={{ mt: 7, mb: 2, mx: 2, position: "relative", zIndex: 10 }}
+            sx={{
+              mt: 7,
+              mb: 2,
+              mx: 2,
+              position: "relative",
+              zIndex: 10,
+              width: "50%",
+            }}
           >
             <CategoryCards
-              classLabel="category-banner"
+              classLabel="category-banner-educacao"
               qty={32}
-              title="Jogos"
+              title="Cursos"
               description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
+              bgcolor={"#648d64"}
               icon={
-                <SportsEsportsOutlinedIcon
+                <CastForEducationOutlinedIcon
                   sx={{
                     position: "absolute",
                     fontSize: "1.2rem",
@@ -144,45 +142,13 @@ const LazerDashboard = ({ open }) => {
               }
             />
             <CategoryCards
-              classLabel="category-banner"
+              classLabel="category-banner-educacao"
               qty={32}
-              title="Cultura"
+              title="Livros"
               description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
+              bgcolor={"#648d64"}
               icon={
-                <BookOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Em grupo"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <GroupsOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Outros"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <CelebrationOutlinedIcon
+                <MenuBookOutlinedIcon
                   sx={{
                     position: "absolute",
                     fontSize: "1.2rem",
@@ -237,33 +203,10 @@ const LazerDashboard = ({ open }) => {
               />
             </Grid>
           </Grid>
-
-          {/*  <Stack
-              sx={{
-                px: 4,
-                my: 3,
-                zIndex: 20000000000000,
-              }}
-              direction={"row"}
-              justifyContent={"end"}
-            >
-                   <Button
-                sx={{ display: "flex", justifyContent: "space-around" }}
-                onMouseOver={() => setShowArrow(true)}
-                onMouseOut={() => setShowArrow(false)}
-                className="relatorioButton"
-              >
-                <Typography className="buttonLabel">
-                  Ver Gastos mensais
-                </Typography>
-
-                {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
-              </Button> 
-            </Stack> */}
         </Paper>
       </Box>
     </Box>
   );
 };
 
-export default LazerDashboard;
+export default EducacaoDashboard;

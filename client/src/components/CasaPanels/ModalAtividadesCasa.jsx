@@ -1,39 +1,26 @@
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import SaveIcon from "@mui/icons-material/Save";
 import {
   Dialog,
-  Box,
-  Typography,
-  Divider,
-  Zoom,
-  Slide,
-  DialogTitle,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  TextField,
-  Stack,
+  DialogTitle,
   IconButton,
   InputAdornment,
+  TextField,
+  Typography,
+  Zoom,
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import React, { forwardRef } from "react";
+import { Field, Form, FormikProvider, useFormik } from "formik";
+import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import {
-  Field,
-  Form,
-  FormikProvider,
-  getIn,
-  Formik,
-  FieldArray,
-  useFormik,
-} from "formik";
 import { setNewAtividadeCasa } from "../../features/casa/casaSlice";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
 
-const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
+const ModalAtividadesCasa = ({ openModal, handleCloseModal, data }) => {
   const dispatch = useDispatch();
   const ValidationSchema = Yup.object({
     nomeAtividade: Yup.string()
@@ -55,14 +42,17 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      _id: data?._id || "",
       nomeAtividade: data?.nomeAtividade || "",
       tempoGasto: data?.tempoGasto || "",
-      dinheiroGasto: data?.dinheiroGasto || data,
+      dinheiroGasto: data?.dinheiroGasto || "",
       descricaoAtividade: data?.descricaoAtividade || "",
     },
-    validationSchema: ValidationSchema,
+    //validationSchema: ValidationSchema,
     onSubmit: (values) => {
+      console.log(values);
       dispatch(setNewAtividadeCasa(values));
+      handleCloseModal();
     },
   });
 
@@ -140,12 +130,12 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
               <IconButton
                 type="submit"
                 sx={{
-                  backgroundColor: "#FFB703",
+                  backgroundColor: "#0c264e",
                   borderRadius: 0,
                   color: "white",
                   width: "45%",
                   transition: "all 0.4s ease",
-                  "&:hover": { backgroundColor: "#FB8500" },
+                  "&:hover": { backgroundColor: "#061B3D" },
                   gap: 2,
                 }}
               >
@@ -156,12 +146,12 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
               <IconButton
                 onClick={() => handleCloseModal()}
                 sx={{
-                  backgroundColor: "#FFB703",
+                  backgroundColor: "#0c264e",
                   borderRadius: 0,
                   color: "white",
                   width: "45%",
                   transition: "all 0.4s ease",
-                  "&:hover": { backgroundColor: "#FB8500" },
+                  "&:hover": { backgroundColor: "#061B3D" },
                   gap: 2,
                 }}
               >
@@ -176,4 +166,4 @@ const ModalAtividades = ({ openModal, handleCloseModal, data }) => {
   );
 };
 
-export default ModalAtividades;
+export default ModalAtividadesCasa;
