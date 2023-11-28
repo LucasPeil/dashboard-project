@@ -23,10 +23,13 @@ import { useTheme } from "@emotion/react";
 import CategoryCards from "../CategoryCards";
 import SearchBar from "../SearchBar";
 import {
+  closeModalCasa,
   getAllAtividadesCasa,
   removeSingleAtividde,
+  setOpenModalCasa,
 } from "../../features/casa/casaSlice";
 import SingleAtividade from "./SingleAtividade";
+import FormAtividade from "../FormAtividade";
 const CasaDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
@@ -37,9 +40,10 @@ const CasaDashboard = ({ open, setOpen }) => {
     Legend
   );
   const dispatch = useDispatch();
-  const { atividadesCasa, remove } = useSelector(
+  const { atividadesCasa, remove, openModalCasa } = useSelector(
     (state) => state.atividadesCasa
   );
+
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const theme = useTheme();
@@ -47,26 +51,33 @@ const CasaDashboard = ({ open, setOpen }) => {
   const tableColumns = [
     {
       name: "Nome da atividade",
+      width: "40%",
       selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
       name: "Descrição",
+      width: "40%",
       selector: (row) => row.descricaoAtividade,
       sortable: true,
     },
 
     {
       name: "Ações",
+      width: "10%",
       selector: (row) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              setSelectedRow(row);
+              dispatch(setOpenModalCasa());
+            }}
+          >
             <EditTwoToneIcon color="success" />
           </IconButton>
           <IconButton
             onClick={() => {
               dispatch(removeSingleAtividde(row._id));
-              console.log(row._id);
             }}
           >
             <DeleteTwoToneIcon color="error" />
@@ -83,9 +94,29 @@ const CasaDashboard = ({ open, setOpen }) => {
   useEffect(() => {
     dispatch(getAllAtividadesCasa());
   }, [remove.isSuccess]);
-
+  const cleanForm = (form) => {
+    form.setFieldValue("nomeAtividade", "");
+    form.setFieldValue("categoria", "");
+    form.setFieldValue("descricaoAtividade", "");
+    form.setFieldValue("tempoGasto", "");
+    form.setFieldValue("dinheiroGasto", "");
+    form.setFieldValue("nivelImportância", "");
+  };
   return (
     <Box sx={{ display: "flex", justifyContent: "end" }}>
+      {/* MODAL EDIÇÃO */}
+      <FormAtividade
+        openModal={openModalCasa}
+        handleCloseModal={closeModalCasa}
+        title={"Nova Atividade Doméstica"}
+        btnColor="#0c264e"
+        btnHoverColor="#000000"
+        categoriaItens={["Compras", "Limpeza", "Refeições"]}
+        card={"Casa"}
+        cleanForm={cleanForm}
+        data={selectedRow}
+      />
+
       {/* MODAL SINGLE ATIVIDADE */}
       {openSingleAtividade && (
         <SingleAtividade

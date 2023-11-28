@@ -21,6 +21,8 @@ import { customStyles } from "../../styles/stylesConst";
 import { useTheme } from "@emotion/react";
 import SearchBar from "../SearchBar";
 import CategoryCards from "../CategoryCards";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllAtividadesLazer } from "../../features/lazer/lazerSlice";
 const LazerDashboard = ({ open }) => {
   ChartJS.register(
     CategoryScale,
@@ -30,43 +32,26 @@ const LazerDashboard = ({ open }) => {
     Tooltip,
     Legend
   );
+  const dispatch = useDispatch();
 
   ChartJS.register(ArcElement, Tooltip, Legend);
   const [imageToDisplay, setImageToDisplay] = useState();
   const theme = useTheme();
   const [showArrow, setShowArrow] = useState(false);
   useEffect(() => {
-    fetch("../assets/inspiracao1")
-      .then(function (response) {
-        return response.blob();
-      })
-      .then(function (blob) {
-        setImageToDisplay(blob);
-      });
+    dispatch(getAllAtividadesLazer());
   }, []);
-
+  const { atividadesLazer } = useSelector((state) => state.atividadesLazer);
   const tableColumns = [
     {
       name: "Título",
-      selector: (row) => row.title,
+      selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
       name: "Descrição",
-      selector: (row) => row.descricao,
+      selector: (row) => row.descricaoAtividade,
       sortable: true,
-    },
-  ];
-  const tableData = [
-    {
-      id: 1,
-      title: "Titulo 1",
-      descricao: "Lorem ipsum dolor sit",
-    },
-    {
-      id: 2,
-      title: "Titulo 2",
-      descricao: "Lorem ipsum",
     },
   ];
 
@@ -221,7 +206,7 @@ const LazerDashboard = ({ open }) => {
             <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
               <DataTable
                 columns={tableColumns}
-                data={tableData}
+                data={atividadesLazer}
                 customStyles={customStyles}
                 subHeader
                 subHeaderComponent={<SearchBar />}

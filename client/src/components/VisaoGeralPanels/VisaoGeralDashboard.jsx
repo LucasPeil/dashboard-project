@@ -1,29 +1,49 @@
-import { Grid, Box, Typography, Stack, Button, Paper } from "@mui/material";
-import React, { useEffect, useState, useMemo } from "react";
-import HeaderCards from "../HeaderCards";
-import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
-import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import DataTable from "react-data-table-component";
-import { customStyles } from "../../styles/stylesConst";
+import { faker } from "@faker-js/faker";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import "../../index.css";
+import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import {
-  Chart as ChartJS,
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  MenuItem,
+} from "@mui/material";
+import {
   ArcElement,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
-import ModalAtividadesCasa from "../CasaPanels/ModalAtividadesCasa";
+import React, { useEffect, useMemo, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import "../../index.css";
+import HeaderCards from "../HeaderCards";
+
 import { useTheme } from "@emotion/react";
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
+import FormAtividade from "../FormAtividade";
+import {
+  setOpenModalCasa,
+  closeModalCasa,
+} from "../../features/casa/casaSlice";
+import {
+  setOpenModalLazer,
+  closeModalLazer,
+} from "../../features/lazer/lazerSlice";
+import {
+  setOpenModalEducacao,
+  closeModalEducacao,
+} from "../../features/educacao/educacaoSlice";
+import { useDispatch, useSelector } from "react-redux";
 const VisaoGeralDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
@@ -38,6 +58,13 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const [imageToDisplay, setImageToDisplay] = useState();
   const theme = useTheme();
   const [showArrow, setShowArrow] = useState(false);
+  const dispatch = useDispatch();
+  const { openModalCasa } = useSelector((state) => state.atividadesCasa);
+  const { openModalLazer } = useSelector((state) => state.atividadesLazer);
+  const { openModalEducacao } = useSelector(
+    (state) => state.atividadesEducacao
+  );
+
   useEffect(() => {
     fetch("../assets/inspiracao1")
       .then(function (response) {
@@ -52,7 +79,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Tempo dedicado a cada tarefa" },
+      title: { display: true, text: "Tempo dedicado" },
     },
     maintainAspectRatio: false,
   };
@@ -77,17 +104,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
       labels,
       datasets: [
         {
-          label: "Dataset 1",
+          label: "CASA",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
           backgroundColor: "#0c264e",
         },
         {
-          label: "Dataset 2",
+          label: "LAZER",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
           backgroundColor: "#f4b26a",
         },
         {
-          label: "Dataset 3",
+          label: "EDUCAÇÃO",
           data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
           backgroundColor: "#648d64",
         },
@@ -97,16 +124,48 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     return data;
   }, []);
 
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const cleanForm = (form) => {
+    form.setFieldValue("nomeAtividade", "");
+    form.setFieldValue("categoria", "");
+    form.setFieldValue("descricaoAtividade", "");
+    form.setFieldValue("tempoGasto", "");
+    form.setFieldValue("dinheiroGasto", "");
+    form.setFieldValue("nivelImportância", "");
+  };
+
   const [showAddIcon, setShowAddIcon] = useState([true, true, true]);
   // 15 30 20 10
   return (
     <Box sx={{ display: "flex", justifyContent: "end" }}>
-      <ModalAtividadesCasa
-        openModal={openModal}
-        handleCloseModal={handleCloseModal}
+      <FormAtividade
+        openModal={openModalCasa}
+        handleCloseModal={closeModalCasa}
+        title={"Nova Atividade Doméstica"}
+        btnColor="#0c264e"
+        btnHoverColor="#000000"
+        categoriaItens={["Compras", "Limpeza", "Refeições"]}
+        card={"Casa"}
+        cleanForm={cleanForm}
+      />
+      <FormAtividade
+        openModal={openModalLazer}
+        handleCloseModal={closeModalLazer}
+        title={"Nova Atividade de Lazer"}
+        btnColor="#f4b26a"
+        btnHoverColor="#E39F54"
+        categoriaItens={["Jogos", "Cultura", "Em grupo", "Outros"]}
+        card={"Lazer"}
+        cleanForm={cleanForm}
+      />
+      <FormAtividade
+        openModal={openModalEducacao}
+        handleCloseModal={closeModalEducacao}
+        title={"Nova Atividade de Educação"}
+        btnColor="#648d64"
+        btnHoverColor="#4E7A4E"
+        categoriaItens={["Cursos", "Livros"]}
+        card={"Educação"}
+        cleanForm={cleanForm}
       />
       <Box
         sx={{
@@ -117,10 +176,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
       >
         <Grid container spacing={10}>
           <Grid item xs={4}>
-            <Box onClick={() => handleOpenModal()}>
+            <Box onClick={() => dispatch(setOpenModalCasa())}>
               <HeaderCards
                 idx={0}
-                title={"Titulo 1"}
                 content={"CASA"}
                 icon={<HomeOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
@@ -158,10 +216,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
             </Box>
           </Grid>
           <Grid item xs={4}>
-            <Box onClick={() => handleOpenModal()}>
+            <Box onClick={() => dispatch(setOpenModalLazer())}>
               <HeaderCards
                 idx={1}
-                title={"Titulo 2"}
                 content={"LAZER"}
                 icon={<CelebrationOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
@@ -198,10 +255,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
             </Box>
           </Grid>
           <Grid item xs={4}>
-            <Box onClick={() => handleOpenModal()}>
+            <Box onClick={() => dispatch(setOpenModalEducacao())}>
               <HeaderCards
                 idx={2}
-                title={"Titulo 3"}
                 content={"EDUCAÇÃO"}
                 icon={<SchoolOutlinedIcon sx={{ fontSize: "4rem" }} />}
                 subtitle={"Adicionar nova atividade"}
@@ -278,12 +334,11 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
             <Box sx={{ px: 2 }}>
               <Bar options={barOptions} data={getData} height={460} />
             </Box>
-            <Stack
+            {/*  <Stack
               sx={{
                 px: 4,
                 my: 3,
                 mb: 5,
-                zIndex: 20000000000000,
               }}
               direction={"row"}
               justifyContent={"end"}
@@ -303,7 +358,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
 
                 {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
               </Button>
-            </Stack>
+            </Stack> */}
           </Stack>
         </Paper>
       </Box>

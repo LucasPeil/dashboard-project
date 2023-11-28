@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, Paper } from "@mui/material";
 import { useSpring, animated } from "@react-spring/web";
 import Hamburger from "hamburger-react";
 import { useTheme } from "@mui/material/styles";
@@ -87,7 +87,7 @@ const VerticalMenu = ({ open, setOpen }) => {
   });
 
   return (
-    <Box component={animated.div} style={verticalNavStyle}>
+    <Paper elevation={8} component={animated.div} style={verticalNavStyle}>
       <IconButton sx={{ ml: 2 }} onClick={() => setOpen(!open)}>
         <Hamburger
           toggled={open}
@@ -128,7 +128,7 @@ const VerticalMenu = ({ open, setOpen }) => {
           )}
         </NavLink>
       ))}
-    </Box>
+    </Paper>
   );
 };
 

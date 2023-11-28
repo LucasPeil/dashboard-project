@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import casaService from "./casaService";
+import lazerService from "./lazerService";
 
 const initialState = {
-  atividadesCasa: [],
-  atividadeCasa: {},
+  atividadesLazer: [],
+  atividadeLazer: {},
   isSuccess: false,
   isLoading: false,
   isError: false,
-  openModalCasa: false,
+  openModalLazer: false,
   register: {
     isSuccess: false,
     isLoading: false,
@@ -28,27 +28,11 @@ const initialState = {
   message: "",
 };
 
-export const setNewAtividadeCasa = createAsyncThunk(
-  "atividadeCasa/post",
-  async (data, thunkAPI) => {
-    try {
-      return await casaService.setNewAtividadeCasa(data);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const getAllAtividadesCasa = createAsyncThunk(
-  "atividadesCasa/getAll",
+export const getAllAtividadesLazer = createAsyncThunk(
+  "atividadesLazer/get",
   async (thunkAPI) => {
     try {
-      return await casaService.getAllAtividadesCasa();
+      return await lazerService.getAllAtividadesLazer();
     } catch (error) {
       const message =
         (error.response &&
@@ -61,11 +45,11 @@ export const getAllAtividadesCasa = createAsyncThunk(
   }
 );
 
-export const getSingleAtividade = createAsyncThunk(
-  "atividadesCasa/singleAtividade",
-  async (id, thunkAPI) => {
+export const setNewAtividadeLazer = createAsyncThunk(
+  "atividadesLazer/post",
+  async (data, thunkAPI) => {
     try {
-      return await casaService.getSingleAtividade(id);
+      return await lazerService.setNewAtividadeLazer(data);
     } catch (error) {
       const message =
         (error.response &&
@@ -77,11 +61,12 @@ export const getSingleAtividade = createAsyncThunk(
     }
   }
 );
-export const removeSingleAtividde = createAsyncThunk(
-  "atividadesCasa/remove",
+
+export const getSingleAtividadeLazer = createAsyncThunk(
+  "atividadesLazer/getId",
   async (id, thunkAPI) => {
     try {
-      return await casaService.removeSingleAtividade(id);
+      return await lazerService.getSingleAtividadeLazer(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -93,8 +78,26 @@ export const removeSingleAtividde = createAsyncThunk(
     }
   }
 );
-export const casaSlice = createSlice({
-  name: "casaSlice",
+
+export const removeSingleAtividadeLazer = createAsyncThunk(
+  "atividadesLazer/delete",
+  async (id, thunkAPI) => {
+    try {
+      return await lazerService.removeSingleAtividadeLazer(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const lazerSlice = createSlice({
+  name: "lazerSlice",
   initialState,
   reducers: {
     resetRegister(state) {
@@ -117,80 +120,80 @@ export const casaSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
     },
-    setOpenModalCasa(state) {
-      state.openModalCasa = true;
+    setOpenModalLazer(state) {
+      state.openModalLazer = true;
     },
-    closeModalCasa(state) {
-      state.openModalCasa = false;
+    closeModalLazer(state) {
+      state.openModalLazer = false;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(setNewAtividadeCasa.pending, (state) => {
+      .addCase(setNewAtividadeLazer.pending, (state) => {
         state.register.isLoading = true;
       })
-      .addCase(setNewAtividadeCasa.fulfilled, (state, action) => {
+      .addCase(setNewAtividadeLazer.fulfilled, (state, action) => {
         state.register.isLoading = false;
         state.register.isError = false;
         state.register.isSuccess = true;
-        state.atividadeCasa = action.payload;
-        state.atividadesCasa.unshift(state.atividadeCasa);
+        state.atividadeLazer = action.payload;
+        state.atividadesLazer.unshift(state.atividadeLazer);
       })
-      .addCase(setNewAtividadeCasa.rejected, (state, action) => {
+      .addCase(setNewAtividadeLazer.rejected, (state, action) => {
         state.register.isLoading = false;
         state.register.isSuccess = false;
         state.register.isError = true;
         state.message = action.payload;
       })
-      .addCase(getAllAtividadesCasa.pending, (state) => {
+      .addCase(getAllAtividadesLazer.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.isSuccess = false;
       })
-      .addCase(getAllAtividadesCasa.fulfilled, (state, action) => {
+      .addCase(getAllAtividadesLazer.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.atividadesCasa = action.payload;
+        state.atividadesLazer = action.payload;
       })
-      .addCase(getAllAtividadesCasa.rejected, (state, action) => {
+      .addCase(getAllAtividadesLazer.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
         state.message = action.payload;
       })
 
-      .addCase(getSingleAtividade.pending, (state) => {
+      .addCase(getSingleAtividadeLazer.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.isSuccess = false;
       })
-      .addCase(getSingleAtividade.fulfilled, (state, action) => {
+      .addCase(getSingleAtividadeLazer.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.atividadeCasa = action.payload;
+        state.atividadeLazer = action.payload;
       })
-      .addCase(getSingleAtividade.rejected, (state, action) => {
+      .addCase(getSingleAtividadeLazer.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(removeSingleAtividde.pending, (state) => {
+      .addCase(removeSingleAtividadeLazer.pending, (state) => {
         state.remove.isLoading = true;
         state.remove.isError = false;
         state.remove.isSuccess = false;
       })
-      .addCase(removeSingleAtividde.fulfilled, (state, action) => {
+      .addCase(removeSingleAtividadeLazer.fulfilled, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
-        state.atividadesCasa = state.atividadesCasa.filter(
+        state.atividadesLazer = state.atividadesLazer.filter(
           (atividade) => atividade._id !== action.payload._id
         );
       })
-      .addCase(removeSingleAtividde.rejected, (state, action) => {
+      .addCase(removeSingleAtividadeLazer.rejected, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isSuccess = false;
         state.remove.isError = true;
@@ -203,8 +206,8 @@ export const {
   resetRegister,
   resetRemove,
   resetUpdate,
-  setOpenModalCasa,
-  closeModalCasa,
-} = casaSlice.actions;
+  setOpenModalLazer,
+  closeModalLazer,
+} = lazerSlice.actions;
 
-export default casaSlice.reducer;
+export default lazerSlice.reducer;

@@ -6,15 +6,11 @@ import { useTheme } from "@emotion/react";
 import { addCoverEffect, removeCoverEffect } from "../../utils/coverFunction";
 
 const HeaderCards = ({
-  title,
   content,
   icon,
   subtitle,
   idx,
-  borderStyle,
-  className_,
   containerDecoration,
-  backgroundColor,
   index,
   setShowAddIcon,
   showAddIcon,

@@ -3,7 +3,7 @@ import RamenDiningOutlinedIcon from "@mui/icons-material/RamenDiningOutlined";
 import LocalLaundryServiceOutlinedIcon from "@mui/icons-material/LocalLaundryServiceOutlined";
 import CastForEducationOutlinedIcon from "@mui/icons-material/CastForEducationOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-
+import { useSelector, useDispatch } from "react-redux";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
 import {
   ArcElement,
@@ -15,13 +15,14 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../styles/stylesConst";
 
 import { useTheme } from "@emotion/react";
 import CategoryCards from "../CategoryCards";
 import SearchBar from "../SearchBar";
+import { getAllAtividadesEducacao } from "../../features/educacao/educacaoSlice";
 const EducacaoDashboard = ({ open }) => {
   ChartJS.register(
     CategoryScale,
@@ -33,31 +34,26 @@ const EducacaoDashboard = ({ open }) => {
   );
 
   ChartJS.register(ArcElement, Tooltip, Legend);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllAtividadesEducacao());
+  }, []);
 
+  const { atividadesEducacao } = useSelector(
+    (state) => state.atividadesEducacao
+  );
   const theme = useTheme();
 
   const tableColumns = [
     {
       name: "Título",
-      selector: (row) => row.title,
+      selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
       name: "Descrição",
-      selector: (row) => row.descricao,
+      selector: (row) => row.descricaoAtividade,
       sortable: true,
-    },
-  ];
-  const tableData = [
-    {
-      id: 1,
-      title: "Titulo 1",
-      descricao: "Lorem ipsum dolor sit",
-    },
-    {
-      id: 2,
-      title: "Titulo 2",
-      descricao: "Lorem ipsum",
     },
   ];
 
@@ -187,7 +183,7 @@ const EducacaoDashboard = ({ open }) => {
             <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
               <DataTable
                 columns={tableColumns}
-                data={tableData}
+                data={atividadesEducacao}
                 customStyles={customStyles}
                 subHeader
                 subHeaderComponent={<SearchBar />}
