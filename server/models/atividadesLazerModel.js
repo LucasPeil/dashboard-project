@@ -3,23 +3,27 @@ const mongoose = require("mongoose");
 const atividadesLazerSchema = new mongoose.Schema({
   nomeAtividade: {
     type: String,
-    required: true,
+    required: false,
   },
   categoria: {
     type: String,
     required: true,
   },
-  descricaoAtividade: {
-    type: String,
-    required: false,
-  },
   tempoGasto: {
-    type: String,
-    required: true,
+    type: Number,
+    required: false,
   },
   dinheiroGasto: {
     type: Number,
     required: false,
+  },
+  descricaoAtividade: {
+    type: String,
+    required: false,
+  },
+  dataInsercao: {
+    type: Date,
+    required: true,
   },
 });
 

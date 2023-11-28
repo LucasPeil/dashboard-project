@@ -24,7 +24,12 @@ app.use("/teste", (req, res) => {
 });
 
 app.use("/api/atividades-casa", require("./routes/atividadesCasaRoutes"));
-//app.use("/api/visaoGeral", require("./routes/visaoGeralRoutes"));
+app.use("/api/atividades-lazer", require("./routes/atividadesLazerRoutes"));
+app.use(
+  "/api/atividades-educacao",
+  require("./routes/atividadesEducacaoRoutes")
+);
+app.use("/api/visao-geral", require("./routes/visaoGeralRoutes"));
 
 app.use(errorHandler);
 

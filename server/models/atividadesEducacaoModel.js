@@ -25,6 +25,10 @@ const atividadesEducacaoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dataInsercao: {
+    type: Date,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("AtividadesEducacao", atividadesEducacaoSchema);

@@ -5,6 +5,10 @@ const atividadesCasaSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  categoria: {
+    type: String,
+    required: true,
+  },
   tempoGasto: {
     type: Number,
     required: false,
@@ -16,6 +20,10 @@ const atividadesCasaSchema = new mongoose.Schema({
   descricaoAtividade: {
     type: String,
     required: false,
+  },
+  dataInsercao: {
+    type: Date,
+    required: true,
   },
 });
 
