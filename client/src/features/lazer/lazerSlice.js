@@ -5,6 +5,10 @@ import lazerService from "./lazerService";
 const initialState = {
   atividadesLazer: [],
   atividadeLazer: {},
+  quantidadeJogos: 0,
+  quantidadeCultura: 0,
+  quantidadeEmGrupo: 0,
+  quantidadeOutros: 0,
   isSuccess: false,
   isLoading: false,
   isError: false,
@@ -27,6 +31,71 @@ const initialState = {
 
   message: "",
 };
+
+export const getJogosQty = createAsyncThunk(
+  "atividadesLazer/getJogosQty",
+  async (id, thunkAPI) => {
+    try {
+      return await lazerService.getJogosQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getCulturaQty = createAsyncThunk(
+  "atividadesLazer/getCulturaQty",
+  async (id, thunkAPI) => {
+    try {
+      return await lazerService.getCulturaQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getEmGrupoQty = createAsyncThunk(
+  "atividadesLazer/getEmGrupoQty",
+  async (id, thunkAPI) => {
+    try {
+      return await lazerService.getEmGrupoQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getOutrosQty = createAsyncThunk(
+  "atividadesLazer/getOutrosQty",
+  async (id, thunkAPI) => {
+    try {
+      return await lazerService.getOutrosQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const getAllAtividadesLazer = createAsyncThunk(
   "atividadesLazer/get",
@@ -143,6 +212,74 @@ export const lazerSlice = createSlice({
         state.register.isLoading = false;
         state.register.isSuccess = false;
         state.register.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getJogosQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getJogosQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeJogos = action.payload.jogosQuantidade;
+      })
+      .addCase(getJogosQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getCulturaQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getCulturaQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeCultura = action.payload.culturaQuantidade;
+      })
+      .addCase(getCulturaQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getEmGrupoQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getEmGrupoQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeEmGrupo = action.payload.emGrupoQuantidade;
+      })
+      .addCase(getEmGrupoQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getOutrosQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getOutrosQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeOutros = action.payload.outrosQuantidade;
+      })
+      .addCase(getOutrosQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
         state.message = action.payload;
       })
       .addCase(getAllAtividadesLazer.pending, (state) => {

@@ -5,6 +5,8 @@ import educacaoService from "./educacaoService";
 const initialState = {
   atividadesEducacao: [],
   atividadeEducacao: {},
+  quantidadeLivros: 0,
+  quantidadeCursos: 0,
   isSuccess: false,
   isLoading: false,
   isError: false,
@@ -27,7 +29,38 @@ const initialState = {
 
   message: "",
 };
-
+export const getCursosQty = createAsyncThunk(
+  "atividadesEducacao/getCursosQty",
+  async (id, thunkAPI) => {
+    try {
+      return await educacaoService.getCursosQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getLivrosQty = createAsyncThunk(
+  "atividadesEducacao/getLivrosQty",
+  async (id, thunkAPI) => {
+    try {
+      return await educacaoService.getLivrosQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const getAllAtividadesEducacao = createAsyncThunk(
   "atividadesEducacao/get",
   async (thunkAPI) => {
@@ -143,6 +176,40 @@ export const educacaoSlice = createSlice({
         state.register.isLoading = false;
         state.register.isSuccess = false;
         state.register.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getCursosQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getCursosQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeCursos = action.payload.cursosQuantidade;
+      })
+      .addCase(getCursosQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getLivrosQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getLivrosQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeLivros = action.payload.livrosQuantidade;
+      })
+      .addCase(getLivrosQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
         state.message = action.payload;
       })
       .addCase(getAllAtividadesEducacao.pending, (state) => {

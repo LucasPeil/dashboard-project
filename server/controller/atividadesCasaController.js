@@ -2,15 +2,6 @@ const AtividadesCasa = require("../models/atividadesCasaModel");
 const asyncHandler = require("express-async-handler");
 
 const getAllAtividadesCasa = asyncHandler(async (req, res) => {
-  /*   const atividadesCasa = await AtividadesCasa.find({});
-
-  if (atividadesCasa.length != 0) {
-    res.status(200).json(atividadesCasa);
-  } else {
-    res.status(404);
-    throw new Error("Erro ao recuperar atividades");
-  } */
-
   res.status(200).json(res.paginatedResults);
 });
 const getComprasQty = asyncHandler(async (req, res) => {

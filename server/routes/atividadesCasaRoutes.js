@@ -12,39 +12,21 @@ const {
 } = require("../controller/atividadesCasaController");
 const paginationHandler = require("../middlewares/paginationMiddleware");
 const AtividadesCasa = require("../models/atividadesCasaModel");
-function filter() {
-  return (req) => {
-    const arr = [
-      "nomeAtividade",
-      "categoria",
-      "descricaoAtividade",
-      "mesInsercao",
-    ];
-
-    const and = [];
-
-    if (req.query.filter) {
-      and.push({
-        $or: arr.map((key) => ({
-          [key]: { $regex: req.query.filter, $options: "i" },
-        })),
-      });
-    }
-
-    if (req.query.categorySelected) {
-      and.push({
-        categoria: { $regex: req.query.categorySelected, $options: "i" },
-      });
-    }
-
-    return and.length > 0 ? { $and: and } : {};
-  };
-}
+const filter = require("../filterFunction");
+const arrSearch = [
+  "nomeAtividade",
+  "categoria",
+  "descricaoAtividade",
+  "mesInsercao",
+];
 
 router.route("/newAtividade").post(setNewAtividadeCasa);
 router
   .route("/")
-  .get(paginationHandler(AtividadesCasa, filter()), getAllAtividadesCasa);
+  .get(
+    paginationHandler(AtividadesCasa, filter(arrSearch)),
+    getAllAtividadesCasa
+  );
 router.route("/quantidadeCompras").get(getComprasQty);
 router.route("/quantidadeLimpeza").get(getLimpezaQty);
 router.route("/quantidadeRefeicoes").get(getRefeicoesQty);
