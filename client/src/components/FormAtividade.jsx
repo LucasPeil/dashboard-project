@@ -15,18 +15,35 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Field, Form, Formik, FormikProvider, useFormik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { setNewAtividadeCasa } from "../features/casa/casaSlice";
 import { setNewAtividadeLazer } from "../features/lazer/lazerSlice";
-import { setNewAtividadeEducacao } from "../features/educacao/educacaoSlice";
+import {
+  resetRegisterEducacao,
+  setNewAtividadeEducacao,
+} from "../features/educacao/educacaoSlice";
 import dayjs from "dayjs";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 const FormAtividade = ({
   openModal,
   handleCloseModal,
@@ -39,6 +56,7 @@ const FormAtividade = ({
   cleanForm,
 }) => {
   const dispatch = useDispatch();
+  const [dataWasSubmitted, setDataWasSubmitted] = useState(false);
   const ValidationSchema = Yup.object({
     nomeAtividade: Yup.string()
       .trim()
@@ -57,6 +75,7 @@ const FormAtividade = ({
         (value) => value?.length <= 1000
       ),
   });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -67,19 +86,28 @@ const FormAtividade = ({
       descricaoAtividade: data?.descricaoAtividade || "",
       categoria: data?.categoria || "",
       nivelImportancia: data?.nivelImportancia || "",
-      dataInsercao: "",
+      mesInsercao: "",
     },
     //validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      values.dataInsercao = new Date();
+      values.mesInsercao = months[new Date().getMonth()];
       card == "Casa"
         ? dispatch(setNewAtividadeCasa(values))
         : card == "Lazer"
         ? dispatch(setNewAtividadeLazer(values))
         : dispatch(setNewAtividadeEducacao(values));
       dispatch(handleCloseModal());
+
+      setDataWasSubmitted(true);
+      formik.resetForm();
     },
   });
+  useEffect(() => {
+    /*  if (dataWasSubmitted) {
+      cleanForm(formik);
+      setDataWasSubmitted(false);
+    } */
+  }, [dataWasSubmitted]);
 
   return (
     <Dialog
@@ -88,6 +116,7 @@ const FormAtividade = ({
       keepMounted
       onClose={() => {
         dispatch(handleCloseModal());
+        cleanForm(formik);
       }}
       fullWidth
       maxWidth={"md"}

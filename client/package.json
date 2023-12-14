@@ -2,6 +2,7 @@
   "name": "dashboard-project",
   "private": true,
   "version": "0.0.0",
+  "homepage": "/visao-geral/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,7 +20,7 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.0",
     "formik": "^2.4.5",
-    "framer-motion": "^10.16.4",
+    "framer-motion": "^10.16.12",
     "hamburger-react": "^2.5.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -27,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.16.0",
+    "react-toastify": "^9.1.3",
     "yup": "^1.3.2"
   },
   "devDependencies": {

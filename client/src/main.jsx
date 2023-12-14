@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import store from "./store.js";
 
+import "react-toastify/dist/ReactToastify.css";
 const theme = createTheme({
   breakpoints: {
     values: {

@@ -23,10 +23,10 @@ const HeaderCards = ({
   });
   const headerIcons = document.querySelectorAll(".icon");
   const iconAnimation = (idx) => {
-    Array.from(headerIcons)[idx].classList.add("icon-shake");
+    Array.from(headerIcons)[idx]?.classList.add("icon-shake");
   };
   const iconAnimationEnd = () => {
-    Array.from(headerIcons)[idx].classList.remove("icon-shake");
+    Array.from(headerIcons)[idx]?.classList.remove("icon-shake");
   };
 
   return (

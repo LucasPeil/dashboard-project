@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const API_URL = "/api/atividades-geral";
+const API_URL = "http://localhost:5101/api/visao-geral/dinheiroGasto";
 
-const getTempoTotal = async () => {
+const getDinheiroGasto = async () => {
   const config = {};
 
   const response = await axios.get(API_URL, config);
   return response.data;
 };
-const visaoGeralService = { getTempoTotal };
+const visaoGeralService = { getDinheiroGasto };
 export default visaoGeralService;

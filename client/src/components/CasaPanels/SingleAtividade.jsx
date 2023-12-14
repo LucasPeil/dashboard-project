@@ -1,5 +1,10 @@
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import SaveIcon from "@mui/icons-material/Save";
+import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
+import TopicOutlinedIcon from "@mui/icons-material/TopicOutlined";
+import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import {
   Dialog,
   DialogActions,
@@ -10,6 +15,9 @@ import {
   TextField,
   Typography,
   Zoom,
+  Box,
+  Divider,
+  Stack,
 } from "@mui/material";
 import { Field, Form, FormikProvider, useFormik } from "formik";
 import React from "react";
@@ -23,7 +31,7 @@ const SingleAtividade = ({
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom ref={ref} {...props} />;
   });
-
+  console.log(rowData);
   return (
     <Dialog
       open={openSingleAtividade}
@@ -33,9 +41,91 @@ const SingleAtividade = ({
       fullWidth
       maxWidth={"md"}
     >
-      <DialogTitle>Nova Atividade Doméstica</DialogTitle>
+      <DialogTitle>{rowData.nomeAtividade}</DialogTitle>
       <DialogContent dividers>
-        <Typography>{rowData.nomeAtividade}</Typography>
+        <Box sx={{ borderTop: "1px solid #B9BDBD" }}>
+          <Box className="modal-atividade-container">
+            <Typography
+              variant="caption"
+              component={"span"}
+              className="modal-atividade-label"
+            >
+              Nome da Atividade
+            </Typography>
+            <Stack direction={"row"} justifyContent={"start"}>
+              <TopicOutlinedIcon sx={{ color: " rgba(9,9,103,1)", mr: 1 }} />
+              <Typography>{rowData?.nomeAtividade}</Typography>
+            </Stack>
+          </Box>
+        </Box>
+        <Box sx={{ borderTop: "1px solid #B9BDBD" }}>
+          <Box className="modal-atividade-container">
+            <Typography
+              variant="caption"
+              component={"span"}
+              className="modal-atividade-label"
+            >
+              Descrição
+            </Typography>
+            <Stack direction={"row"} justifyContent={"start"}>
+              <TextSnippetOutlinedIcon
+                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
+              />
+              <Typography>{rowData?.descricaoAtividade}</Typography>
+            </Stack>
+          </Box>
+        </Box>
+        <Box sx={{ borderTop: "1px solid #B9BDBD" }}>
+          <Box className="modal-atividade-container">
+            <Typography
+              variant="caption"
+              component={"span"}
+              className="modal-atividade-label"
+            >
+              Dinheiro gasto
+            </Typography>
+            <Stack direction={"row"} justifyContent={"start"}>
+              <AttachMoneyOutlinedIcon
+                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
+              />
+              <Typography>{`${rowData?.dinheiroGasto} reais`}</Typography>
+            </Stack>
+          </Box>
+        </Box>
+        <Box sx={{ borderTop: "1px solid #B9BDBD" }}>
+          <Box className="modal-atividade-container">
+            <Typography
+              variant="caption"
+              component={"span"}
+              className="modal-atividade-label"
+            >
+              Tempo dedicado à tarefa
+            </Typography>
+            <Stack direction={"row"} justifyContent={"start"}>
+              <AccessTimeOutlinedIcon
+                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
+              />
+              <Typography>{`${rowData?.tempoGasto} minutos`}</Typography>
+            </Stack>
+          </Box>
+        </Box>
+        <Box sx={{ borderTop: "1px solid #B9BDBD" }}>
+          <Box className="modal-atividade-container">
+            <Typography
+              variant="caption"
+              component={"span"}
+              className="modal-atividade-label"
+            >
+              Categoria
+            </Typography>
+            <Stack direction={"row"} justifyContent={"start"}>
+              <ContentPasteSearchOutlinedIcon
+                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
+              />
+              <Typography>{rowData?.categoria}</Typography>
+            </Stack>
+          </Box>
+        </Box>
       </DialogContent>
     </Dialog>
   );

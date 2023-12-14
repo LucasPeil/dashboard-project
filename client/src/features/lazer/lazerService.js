@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5100/api/atividades-lazer/";
+const API_URL = "http://localhost:5101/api/atividades-lazer/";
 
 const setNewAtividadeLazer = async (data) => {
   const config = {

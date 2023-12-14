@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5100/api/atividades-casa";
+const API_URL = "http://localhost:5101/api/atividades-casa";
 
 const setNewAtividadeCasa = async (data) => {
   const config = {
@@ -19,9 +19,24 @@ const setNewAtividadeCasa = async (data) => {
 
   return response.data;
 };
-
-const getAllAtividadesCasa = async () => {
+const getComprasQty = async () => {
   const config = {};
+  const response = await axios.get(API_URL + `/quantidadeCompras`);
+  return response.data;
+};
+const getLimpezaQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeLimpeza`);
+  return response.data;
+};
+const getRefeicoesQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeRefeicoes`);
+  return response.data;
+};
+
+const getAllAtividadesCasa = async (options) => {
+  const config = { params: { ...options } };
 
   const response = await axios.get(API_URL, config);
   return response.data;
@@ -42,6 +57,9 @@ const casaService = {
   getAllAtividadesCasa,
   getSingleAtividade,
   removeSingleAtividade,
+  getComprasQty,
+  getLimpezaQty,
+  getRefeicoesQty,
 };
 
 export default casaService;

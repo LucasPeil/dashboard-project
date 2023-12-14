@@ -1,13 +1,15 @@
 export const customStyles = {
   table: {
     style: {
-      overflow: "hidden",
-      minHeight: "40vh",
+      overflow: "auto",
+      height: "40vh",
     },
   },
   rows: {
     style: {
       fontSize: "16px",
+      display: "flex",
+      justifyContent: "space-between",
     },
   },
   subHeader: {
@@ -34,7 +36,7 @@ export const customStyles = {
   },
   pagination: {
     style: {
-      position: "absolute",
+      position: "relative",
       bottom: 0,
       left: 0,
     },

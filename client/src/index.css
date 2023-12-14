@@ -83,10 +83,7 @@
     padding-left: 1rem;
 
 }
-.table{
-    min-height: 50vh;
-    border: 1px solid red;
-}
+
 .coverEffect{
     /* transform: rotate(300deg) !important; */
     height:32rem !important;
@@ -96,7 +93,56 @@
     z-index: -2; 
    
 }
-.category-banner::before, .category-banner-casa::before, .category-banner-educacao::before{
+.category-banner-lazer, .category-banner-casa, .category-banner-educacao{
+  width: 15rem;
+  height: 15rem;
+  transform: translate(-6.5rem,-70%) rotate(356deg);
+  position: absolute;
+  top: 0;
+  border-radius: 10rem;
+  transition: all 0.3s ease-in-out;
+}
+
+
+.category-banner-casa{
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,103,1) 36%, rgba(16,162,191,1) 100%);
+  
+}
+.category-banner-lazer{
+    background: linear-gradient(90deg, rgba(163,99,29,1) 0%, rgba(232,166,94,1) 46%, rgba(245,200,151,1) 100%);
+}
+.category-banner-educacao{
+    background: linear-gradient(90deg, rgba(17,92,17,1) 0%, rgba(100,141,100,1) 47%, rgba(191,219,191,1) 100%);
+}
+ 
+.modal-atividade-container{
+background-color:  #f0f0f0;
+padding: 0.5rem 0.4rem;
+margin: 0.55rem 0  1rem 0;
+
+position: relative;
+    
+} 
+.modal-atividade-label{
+    position: absolute;
+    top: -1.2rem;
+    z-index: 2;
+    background: white;
+    font-weight: bold !important;
+    line-height: 0.4rem;
+}
+.title{
+    transition: color 0.3s ease-in-out 0.1s;
+}
+.modal-atividade-content{
+
+}
+
+
+
+
+
+/* .category-banner::before, .category-banner-casa::before, .category-banner-educacao::before{
     content: "";
     background-color: var(--banner-color);
     display: flex;
@@ -128,9 +174,14 @@
 }
 .category-banner-casa::after{
     background-color: #000000;
+  
 }
 .category-banner-educacao::after{
     background-color: #345734;
 }
- 
-
+ */
+/* .table{
+    border:"1px solid red";
+    height:30vh;
+    overflow: auto;
+} */

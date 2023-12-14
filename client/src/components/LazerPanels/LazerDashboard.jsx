@@ -1,5 +1,12 @@
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
@@ -23,6 +30,7 @@ import SearchBar from "../SearchBar";
 import CategoryCards from "../CategoryCards";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllAtividadesLazer } from "../../features/lazer/lazerSlice";
+import MotionDiv from "../../MotionDiv";
 const LazerDashboard = ({ open }) => {
   ChartJS.register(
     CategoryScale,
@@ -33,10 +41,10 @@ const LazerDashboard = ({ open }) => {
     Legend
   );
   const dispatch = useDispatch();
-
+  const theme = useTheme();
+  const downMd = useMediaQuery(theme.breakpoints.down("md"));
   ChartJS.register(ArcElement, Tooltip, Legend);
   const [imageToDisplay, setImageToDisplay] = useState();
-  const theme = useTheme();
   const [showArrow, setShowArrow] = useState(false);
   useEffect(() => {
     dispatch(getAllAtividadesLazer());
@@ -60,170 +68,178 @@ const LazerDashboard = ({ open }) => {
   const handleCloseModal = () => setOpenModal(false);
   // 15 30 20 10
   return (
-    <Box sx={{ display: "flex", justifyContent: "end" }}>
-      <Box
-        sx={{
-          transition: "all 0.5s ease",
-          width: open ? "calc(100% - 14rem)" : "calc(100% - 6rem)",
-        }}
-      >
-        <Paper
-          /* onMouseOver={() => coverEffect()} */
-          elevation={6}
+    <MotionDiv>
+      <Box sx={{ display: "flex", justifyContent: "end" }}>
+        <Box
           sx={{
-            px: 2,
-            boxSizing: "border-box",
-            width: "calc(100% - 4rem)",
-            margin: "2rem auto",
-            minHeight: "90vh",
-            position: "relative",
+            transition: "all 0.5s ease",
+            width: open ? "calc(100% - 14rem)" : "calc(100% - 6rem)",
           }}
-          style={{}}
         >
-          <Stack
-            direction={"column"}
-            justifyContent={"space-between"}
-            alignItems={"space-between"}
+          <Paper
+            /* onMouseOver={() => coverEffect()} */
+            elevation={6}
+            sx={{
+              px: 2,
+              boxSizing: "border-box",
+              width: "calc(100% - 4rem)",
+              margin: "2rem auto",
+              minHeight: "90vh",
+              position: "relative",
+            }}
+            style={{}}
           >
-            <Box
-              sx={{
-                borderBottom: "1px solid #D8D8D8",
-                pb: 1,
-                pt: 4,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                component="h2"
-                sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
-              >
-                DETALHES SOBRE SEU LAZER
-              </Typography>
-
-              <CelebrationOutlinedIcon
-                sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
-              />
-            </Box>
-          </Stack>
-          <Stack
-            direction={"row"}
-            spacing={10}
-            sx={{ mt: 7, mb: 2, mx: 2, position: "relative", zIndex: 10 }}
-          >
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Jogos"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <SportsEsportsOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Cultura"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <BookOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Em grupo"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <GroupsOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-            <CategoryCards
-              classLabel="category-banner"
-              qty={32}
-              title="Outros"
-              description={"Descrição qualquer..."}
-              bgcolor={"#f4b26a"}
-              icon={
-                <CelebrationOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    fontSize: "1.2rem",
-                    ml: 2,
-                  }}
-                />
-              }
-            />
-          </Stack>
-
-          <Grid container>
-            <Grid
-              sx={{
-                display: "flex",
-                position: "relative",
-                flexDirection: "column",
-                justifyContent: "start",
-                alignItems: "start",
-              }}
-              item
-              xs={12}
+            <Stack
+              direction={"column"}
+              justifyContent={"space-between"}
+              alignItems={"space-between"}
             >
               <Box
                 sx={{
-                  boxSizing: "border-box",
-                  p: 1,
-                  height: "53px",
-                  // borderRadius: "0.8rem",
+                  borderBottom: "1px solid #D8D8D8",
+                  pb: 1,
+                  pt: 4,
                   display: "flex",
-                  justifyContent: "space-around",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  width: "100%",
                 }}
-              ></Box>
-            </Grid>
-            <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
-              <DataTable
-                columns={tableColumns}
-                data={atividadesLazer}
-                customStyles={customStyles}
-                subHeader
-                subHeaderComponent={<SearchBar />}
-                striped
-                pagination
-                paginationServer
-                paginationComponentOptions={{
-                  rowsPerPageText: "Itens por página",
-                  rangeSeparatorText: "de",
-                  selectAllRowsItem: true,
-                  selectAllRowsItemText: "Todos",
-                }}
-              />
-            </Grid>
-          </Grid>
+              >
+                <Typography
+                  component="h2"
+                  sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
+                >
+                  DETALHES SOBRE SEU LAZER
+                </Typography>
 
-          {/*  <Stack
+                <CelebrationOutlinedIcon
+                  sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
+                />
+              </Box>
+            </Stack>
+            <Stack
+              direction={downMd ? "column" : "row"}
+              spacing={10}
+              sx={{
+                mt: 7,
+                mb: 2,
+                mx: 2,
+                position: "relative",
+                zIndex: 10,
+              }}
+            >
+              <CategoryCards
+                classLabel="category-banner-lazer"
+                qty={32}
+                title="Jogos"
+                description={"Descrição qualquer..."}
+                bgcolor={"#f4b26a"}
+                icon={
+                  <SportsEsportsOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      fontSize: "2rem",
+                      ml: 2,
+                    }}
+                  />
+                }
+              />
+              <CategoryCards
+                classLabel="category-banner-lazer"
+                qty={32}
+                title="Cultura"
+                description={"Descrição qualquer..."}
+                bgcolor={"#f4b26a"}
+                icon={
+                  <BookOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      fontSize: "2rem",
+                      ml: 2,
+                    }}
+                  />
+                }
+              />
+              <CategoryCards
+                classLabel="category-banner-lazer"
+                qty={32}
+                title="Em grupo"
+                description={"Descrição qualquer..."}
+                bgcolor={"#f4b26a"}
+                icon={
+                  <GroupsOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      fontSize: "2rem",
+                      ml: 2,
+                    }}
+                  />
+                }
+              />
+              <CategoryCards
+                classLabel="category-banner-lazer"
+                qty={32}
+                title="Outros"
+                description={"Descrição qualquer..."}
+                bgcolor={"#f4b26a"}
+                icon={
+                  <CelebrationOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      fontSize: "2.2rem",
+                      ml: 2,
+                    }}
+                  />
+                }
+              />
+            </Stack>
+
+            <Grid container>
+              <Grid
+                sx={{
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "column",
+                  justifyContent: "start",
+                  alignItems: "start",
+                }}
+                item
+                xs={12}
+              >
+                <Box
+                  sx={{
+                    boxSizing: "border-box",
+                    p: 1,
+                    height: "53px",
+                    // borderRadius: "0.8rem",
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                ></Box>
+              </Grid>
+              <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
+                <DataTable
+                  className="table"
+                  columns={tableColumns}
+                  data={atividadesLazer}
+                  customStyles={customStyles}
+                  subHeader
+                  subHeaderComponent={<SearchBar />}
+                  striped
+                  pagination
+                  paginationServer
+                  paginationComponentOptions={{
+                    rowsPerPageText: "Itens por página",
+                    rangeSeparatorText: "de",
+                    selectAllRowsItem: true,
+                    selectAllRowsItemText: "Todos",
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            {/*  <Stack
               sx={{
                 px: 4,
                 my: 3,
@@ -245,9 +261,10 @@ const LazerDashboard = ({ open }) => {
                 {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
               </Button> 
             </Stack> */}
-        </Paper>
+          </Paper>
+        </Box>
       </Box>
-    </Box>
+    </MotionDiv>
   );
 };
 

@@ -10,34 +10,89 @@ const CategoryCards = ({
   bgcolor,
   icon,
   classLabel,
+  setCategorySelected,
+  categorySelected,
+  active,
+  setActive,
+  idx,
 }) => {
   const theme = useTheme();
+  const activeStyle = active[idx]
+    ? {
+        cursor: "pointer",
+        transform: "scale(110%)",
+        ".category-banner-casa, .category-banner-lazer, .category-banner-educacao":
+          {
+            transform: "translate(0,0) rotate(360deg)",
+            width: "100%",
+            borderRadius: 0,
+          },
+        ".title": {
+          color: "white",
+        },
+        ".description": {
+          color: "white",
+        },
+        ".category-description": {
+          color: "white",
+        },
+      }
+    : {};
+  const paperStyle = {
+    display: "flex",
+    width: "22rem",
+    minHeight: "9.5rem",
+    borderRadius: "0.6rem",
+    position: "relative",
+    overflow: "hidden",
+    positions: "relative",
+    transition: "all 0.3s ease-in-out",
+    "&:hover": {
+      cursor: "pointer",
+      transform: "scale(110%)",
+      ".category-banner-casa, .category-banner-lazer, .category-banner-educacao":
+        {
+          transform: "translate(0,0) rotate(360deg)",
+          width: "100%",
+          borderRadius: 0,
+        },
+      ".title": {
+        color: "white",
+      },
+      ".description": {
+        color: "white",
+      },
+      ".category-description": {
+        color: "white",
+      },
+    },
+  };
+
   return (
     <Paper
-      className={classLabel}
       style={{ "--banner-color": bgcolor }}
       elevation={5}
-      sx={{
-        display: "flex",
-        width: "90%",
-        borderRadius: "0.6rem",
-        minHeight: "7rem",
-        position: "relative",
+      onClick={() => {
+        setCategorySelected(title);
+
+        let arrayCopy = active;
+        arrayCopy.fill(false);
+        arrayCopy.splice(idx, 1, !active[idx]);
+        setActive(arrayCopy);
       }}
+      sx={{ ...paperStyle, ...activeStyle }}
     >
+      <Box className={classLabel}></Box>
       <Box>
         <Typography
           variant="h4"
           sx={{
-            fontWeight: "bold",
-            fontSize: "1rem",
             position: "absolute",
             zIndex: 1,
             top: "0.7rem",
             color: "white",
           }}
         >
-          {title}
           {icon}
         </Typography>
       </Box>
@@ -52,19 +107,39 @@ const CategoryCards = ({
         }}
       >
         <Typography
+          className="title"
           variant="body2"
           sx={{
-            fontSize: "0.8rem",
-            fontWeight: "bold",
+            fontSize: "1.5rem",
             width: "100%",
+            textAlign: "center",
+            mb: 1,
+            zIndex: 1,
           }}
         >
-          {description}{" "}
+          {title}
         </Typography>
         <Typography
+          className="description"
+          variant="caption"
+          sx={{
+            fontSize: "rem",
+            width: "100%",
+            textAlign: "center",
+            zIndex: 1,
+          }}
+        >
+          {description}
+        </Typography>
+        <Typography
+          className="category-description"
           variant="caption"
           color={"text.secondary"}
-          sx={{ position: "absolute", bottom: "0.3rem", right: "0.3rem" }}
+          sx={{
+            position: "absolute",
+            top: "0.5rem",
+            right: "0.3rem",
+          }}
         >
           {`${qty} Itens cadastrados`}
         </Typography>

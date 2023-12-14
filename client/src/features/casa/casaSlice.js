@@ -5,6 +5,9 @@ import casaService from "./casaService";
 const initialState = {
   atividadesCasa: [],
   atividadeCasa: {},
+  quantidadeCompras: 0,
+  quantidadeLimpeza: 0,
+  quantidadeRefeicoes: 0,
   isSuccess: false,
   isLoading: false,
   isError: false,
@@ -13,16 +16,19 @@ const initialState = {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
   update: {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
   remove: {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
 
   message: "",
@@ -46,9 +52,9 @@ export const setNewAtividadeCasa = createAsyncThunk(
 );
 export const getAllAtividadesCasa = createAsyncThunk(
   "atividadesCasa/getAll",
-  async (thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
-      return await casaService.getAllAtividadesCasa();
+      return await casaService.getAllAtividadesCasa(params);
     } catch (error) {
       const message =
         (error.response &&
@@ -93,21 +99,69 @@ export const removeSingleAtividde = createAsyncThunk(
     }
   }
 );
+export const getComprasQty = createAsyncThunk(
+  "atividadesCasa/getComprasQty",
+  async (id, thunkAPI) => {
+    try {
+      return await casaService.getComprasQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getLimpezaQty = createAsyncThunk(
+  "atividadesCasa/getLimpezaQty",
+  async (id, thunkAPI) => {
+    try {
+      return await casaService.getLimpezaQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getRefeicoesQty = createAsyncThunk(
+  "atividadesCasa/getRefeicoesQty",
+  async (id, thunkAPI) => {
+    try {
+      return await casaService.getRefeicoesQty();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const casaSlice = createSlice({
   name: "casaSlice",
   initialState,
   reducers: {
-    resetRegister(state) {
+    resetRegisterCasa(state) {
       state.register.isSuccess = false;
       state.register.isLoading = false;
       state.register.isError = false;
     },
-    resetUpdate(state) {
+    resetUpdateCasa(state) {
       state.update.isSuccess = false;
       state.update.isLoading = false;
       state.update.isError = false;
     },
-    resetRemove(state) {
+    resetRemoveCasa(state) {
       state.remove.isSuccess = false;
       state.remove.isLoading = false;
       state.remove.isError = false;
@@ -130,11 +184,12 @@ export const casaSlice = createSlice({
         state.register.isLoading = true;
       })
       .addCase(setNewAtividadeCasa.fulfilled, (state, action) => {
-        state.register.isLoading = false;
         state.register.isError = false;
         state.register.isSuccess = true;
-        state.atividadeCasa = action.payload;
-        state.atividadesCasa.unshift(state.atividadeCasa);
+        state.register.message = action.payload.message;
+        state.atividadeCasa = action.payload.atividadeCasa;
+        state.atividadesCasa.documents.unshift(state.atividadeCasa);
+        state.register.isLoading = false;
       })
       .addCase(setNewAtividadeCasa.rejected, (state, action) => {
         state.register.isLoading = false;
@@ -177,6 +232,57 @@ export const casaSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(getComprasQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getComprasQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeCompras = action.payload.comprasQuantidade;
+      })
+      .addCase(getComprasQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getLimpezaQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getLimpezaQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeLimpeza = action.payload.limpezaQuantidade;
+      })
+      .addCase(getLimpezaQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getRefeicoesQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getRefeicoesQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeRefeicoes = action.payload.refeicoesQuantidade;
+      })
+      .addCase(getRefeicoesQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(removeSingleAtividde.pending, (state) => {
         state.remove.isLoading = true;
         state.remove.isError = false;
@@ -186,9 +292,13 @@ export const casaSlice = createSlice({
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
-        state.atividadesCasa = state.atividadesCasa.filter(
-          (atividade) => atividade._id !== action.payload._id
+
+        const idx = state.atividadesCasa.documents.findIndex(
+          (atividade) => atividade._id === action.payload.atividade._id
         );
+        state.atividadesCasa.documents.splice(idx, 1);
+
+        state.remove.message = action.payload.message;
       })
       .addCase(removeSingleAtividde.rejected, (state, action) => {
         state.remove.isLoading = false;
@@ -200,9 +310,9 @@ export const casaSlice = createSlice({
 
 export const {
   reset,
-  resetRegister,
-  resetRemove,
-  resetUpdate,
+  resetRegisterCasa,
+  resetRemoveCasa,
+  resetUpdateCasa,
   setOpenModalCasa,
   closeModalCasa,
 } = casaSlice.actions;

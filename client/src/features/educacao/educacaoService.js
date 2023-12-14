@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5100/api/atividades-educacao/";
+const API_URL = "http://localhost:5101/api/atividades-educacao/";
 
 const setNewAtividadeEducacao = async (data) => {
   const config = {
