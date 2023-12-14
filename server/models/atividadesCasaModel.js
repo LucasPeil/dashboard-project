@@ -21,8 +21,9 @@ const atividadesCasaSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  dataInsercao: {
-    type: Date,
+
+  mesInsercao: {
+    type: String,
     required: true,
   },
 });

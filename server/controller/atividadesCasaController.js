@@ -2,16 +2,42 @@ const AtividadesCasa = require("../models/atividadesCasaModel");
 const asyncHandler = require("express-async-handler");
 
 const getAllAtividadesCasa = asyncHandler(async (req, res) => {
-  const atividadesCasa = await AtividadesCasa.find({});
+  res.status(200).json(res.paginatedResults);
+});
+const getComprasQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesCasa.countDocuments({
+    categoria: "Compras",
+  }).exec();
 
-  if (atividadesCasa.length != 0) {
-    res.status(200).json(atividadesCasa);
+  if (qty) {
+    res.status(200).json({ comprasQuantidade: qty });
   } else {
     res.status(404);
-    throw new Error("Erro ao recuperar atividades");
+    throw new Error("Erro ao recuperar os dados");
   }
 });
-
+const getLimpezaQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesCasa.countDocuments({
+    categoria: "Limpeza",
+  }).exec();
+  if (qty) {
+    res.status(200).json({ limpezaQuantidade: qty });
+  } else {
+    res.status(404);
+    throw new Error("Erro ao recuperar os dados");
+  }
+});
+const getRefeicoesQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesCasa.countDocuments({
+    categoria: "Refeições",
+  }).exec();
+  if (qty) {
+    res.status(200).json({ refeicoesQuantidade: qty });
+  } else {
+    res.status(404);
+    throw new Error("Erro ao recuperar os dados");
+  }
+});
 const getSingleAtividade = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const atividade = await AtividadesCasa.findById(id);
@@ -44,7 +70,7 @@ const setNewAtividadeCasa = asyncHandler(async (req, res) => {
   }
 
   if (atividadeCasa) {
-    res.status(201).json(atividadeCasa);
+    res.status(201).json({ atividadeCasa, message });
   } else {
     res.status(400);
     throw new Error("Erro ao inserir dados");
@@ -57,7 +83,9 @@ const deleteAtividade = asyncHandler(async (req, res) => {
   const atividade = await AtividadesCasa.findByIdAndDelete(id);
 
   if (atividade) {
-    res.status(200).json(atividade);
+    res
+      .status(200)
+      .json({ atividade, message: "Atividade excluída com sucesso" });
   } else {
     res.status(400);
     throw new Error("Erro ao tentar excluir dados");
@@ -69,4 +97,7 @@ module.exports = {
   getSingleAtividade,
   setNewAtividadeCasa,
   deleteAtividade,
+  getComprasQty,
+  getLimpezaQty,
+  getRefeicoesQty,
 };

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { getTempoGasto } = require("../controller/visaoGeralController");
+const { getDinheiroGasto } = require("../controller/visaoGeralController");
 
-router.route("/tempoGasto").get(getTempoGasto);
+router.route("/dinheiroGasto").get(getDinheiroGasto);
 
 module.exports = router;

@@ -25,8 +25,8 @@ const atividadesEducacaoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  dataInsercao: {
-    type: Date,
+  mesInsercao: {
+    type: String,
     required: true,
   },
 });

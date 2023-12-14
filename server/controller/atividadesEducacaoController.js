@@ -3,16 +3,31 @@ const AtividadesEducacao = require("../models/atividadesEducacaoModel");
 const asyncHandler = require("express-async-handler");
 
 const getAllAtividadesEducacao = asyncHandler(async (req, res) => {
-  const atividadesEducacao = await AtividadesEducacao.find({});
+  res.status(200).json(res.paginatedResults);
+});
+const getCursosQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesEducacao.countDocuments({
+    categoria: "Cursos",
+  }).exec();
 
-  if (atividadesEducacao) {
-    res.status(200).json(atividadesEducacao);
+  if (qty) {
+    res.status(200).json({ cursosQuantidade: qty });
   } else {
     res.status(404);
-    throw new Error("Erro ao recuperar atividades");
+    throw new Error("Erro ao recuperar os dados");
   }
 });
-
+const getLivrosQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesEducacao.countDocuments({
+    categoria: "Livros",
+  }).exec();
+  if (qty) {
+    res.status(200).json({ livrosQuantidade: qty });
+  } else {
+    res.status(404);
+    throw new Error("Erro ao recuperar os dados");
+  }
+});
 const getSingleAtividadeEducacao = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const atividade = await AtividadesEducacao.findById(id);
@@ -67,4 +82,6 @@ module.exports = {
   getSingleAtividadeEducacao,
   setNewAtividadeEducacao,
   deleteAtividadeEducacao,
+  getCursosQty,
+  getLivrosQty,
 };
