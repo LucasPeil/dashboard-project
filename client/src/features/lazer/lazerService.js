@@ -14,8 +14,8 @@ const setNewAtividadeLazer = async (data) => {
   return response.data;
 };
 
-const getAllAtividadesLazer = async () => {
-  const config = {};
+const getAllAtividadesLazer = async (options) => {
+  const config = { params: { ...options } };
 
   const response = await axios.get(API_URL, config);
 
@@ -32,12 +32,35 @@ const removeSingleAtividadeLazer = async (id) => {
   const response = await axios.delete(API_URL + `/${id}`);
   return response.data;
 };
-
+const getCulturaQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeCultura`);
+  return response.data;
+};
+const getEmGrupoQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeEmGrupo`);
+  return response.data;
+};
+const getJogosQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeJogos`);
+  return response.data;
+};
+const getOutrosQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeOutros`);
+  return response.data;
+};
 const lazerService = {
   setNewAtividadeLazer,
   getAllAtividadesLazer,
   getSingleAtividadeLazer,
   removeSingleAtividadeLazer,
+  getCulturaQty,
+  getEmGrupoQty,
+  getJogosQty,
+  getOutrosQty,
 };
 
 export default lazerService;

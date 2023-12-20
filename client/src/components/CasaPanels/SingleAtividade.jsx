@@ -27,11 +27,12 @@ const SingleAtividade = ({
   rowData,
   openSingleAtividade,
   handleCloseSingleAtividade,
+  iconColor,
+  isAtividadeEducacao = false,
 }) => {
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom ref={ref} {...props} />;
   });
-  console.log(rowData);
   return (
     <Dialog
       open={openSingleAtividade}
@@ -53,7 +54,7 @@ const SingleAtividade = ({
               Nome da Atividade
             </Typography>
             <Stack direction={"row"} justifyContent={"start"}>
-              <TopicOutlinedIcon sx={{ color: " rgba(9,9,103,1)", mr: 1 }} />
+              <TopicOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
               <Typography>{rowData?.nomeAtividade}</Typography>
             </Stack>
           </Box>
@@ -68,9 +69,7 @@ const SingleAtividade = ({
               Descrição
             </Typography>
             <Stack direction={"row"} justifyContent={"start"}>
-              <TextSnippetOutlinedIcon
-                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
-              />
+              <TextSnippetOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
               <Typography>{rowData?.descricaoAtividade}</Typography>
             </Stack>
           </Box>
@@ -85,9 +84,7 @@ const SingleAtividade = ({
               Dinheiro gasto
             </Typography>
             <Stack direction={"row"} justifyContent={"start"}>
-              <AttachMoneyOutlinedIcon
-                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
-              />
+              <AttachMoneyOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
               <Typography>{`${rowData?.dinheiroGasto} reais`}</Typography>
             </Stack>
           </Box>
@@ -102,9 +99,7 @@ const SingleAtividade = ({
               Tempo dedicado à tarefa
             </Typography>
             <Stack direction={"row"} justifyContent={"start"}>
-              <AccessTimeOutlinedIcon
-                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
-              />
+              <AccessTimeOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
               <Typography>{`${rowData?.tempoGasto} minutos`}</Typography>
             </Stack>
           </Box>
@@ -120,7 +115,7 @@ const SingleAtividade = ({
             </Typography>
             <Stack direction={"row"} justifyContent={"start"}>
               <ContentPasteSearchOutlinedIcon
-                sx={{ color: " rgba(9,9,103,1)", mr: 1 }}
+                sx={{ color: iconColor, mr: 1 }}
               />
               <Typography>{rowData?.categoria}</Typography>
             </Stack>

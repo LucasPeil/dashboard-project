@@ -10,9 +10,9 @@ const initialState = {
 
 export const getTotalDinheiroGasto = createAsyncThunk(
   "visaoGeral/getTotalDinheiroGasto",
-  async (thunkAPI) => {
+  async (ano, thunkAPI) => {
     try {
-      return await visaoGeralService.getDinheiroGasto();
+      return await visaoGeralService.getDinheiroGasto(ano);
     } catch (error) {
       const message =
         (error.response &&

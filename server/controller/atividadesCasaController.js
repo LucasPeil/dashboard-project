@@ -9,7 +9,7 @@ const getComprasQty = asyncHandler(async (req, res) => {
     categoria: "Compras",
   }).exec();
 
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ comprasQuantidade: qty });
   } else {
     res.status(404);
@@ -20,7 +20,7 @@ const getLimpezaQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesCasa.countDocuments({
     categoria: "Limpeza",
   }).exec();
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ limpezaQuantidade: qty });
   } else {
     res.status(404);
@@ -31,7 +31,7 @@ const getRefeicoesQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesCasa.countDocuments({
     categoria: "Refeições",
   }).exec();
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ refeicoesQuantidade: qty });
   } else {
     res.status(404);

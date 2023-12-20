@@ -1,17 +1,19 @@
-import { faker } from "@faker-js/faker";
+import { useTheme } from "@emotion/react";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
+import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import {
   Box,
-  Button,
   Grid,
   Paper,
   Stack,
   Typography,
+  Select,
   MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import {
   ArcElement,
@@ -23,33 +25,30 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import "../../index.css";
-import HeaderCards from "../HeaderCards";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useTheme } from "@emotion/react";
-import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-import FormAtividade from "../FormAtividade";
+import MotionDiv from "../../MotionDiv";
 import {
-  setOpenModalCasa,
   closeModalCasa,
   resetRegisterCasa,
+  setOpenModalCasa,
 } from "../../features/casa/casaSlice";
 import {
-  setOpenModalLazer,
-  closeModalLazer,
-  resetRegisterLazer,
-} from "../../features/lazer/lazerSlice";
-import {
-  setOpenModalEducacao,
   closeModalEducacao,
   resetRegisterEducacao,
+  setOpenModalEducacao,
 } from "../../features/educacao/educacaoSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  closeModalLazer,
+  resetRegisterLazer,
+  setOpenModalLazer,
+} from "../../features/lazer/lazerSlice";
 import { getTotalDinheiroGasto } from "../../features/visaoGeral/visaoGeralSlice";
-import dayjs from "dayjs";
-import MotionDiv from "../../MotionDiv";
+import "../../index.css";
+import FormAtividade from "../FormAtividade";
+import HeaderCards from "../HeaderCards";
 const VisaoGeralDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
@@ -63,6 +62,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const theme = useTheme();
   const dispatch = useDispatch();
+  const [ano, setAno] = useState(2023);
   const { openModalCasa, register } = useSelector(
     (state) => state.atividadesCasa
   );
@@ -114,8 +114,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     }
   };
   useEffect(() => {
-    dispatch(getTotalDinheiroGasto());
+    dispatch(getTotalDinheiroGasto(ano));
   }, [
+    ano,
     registerCasa.isSuccess,
     registerLazer.isSuccess,
     registerEducacao.isSuccess,
@@ -441,7 +442,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 />
               </Box>
               {data && (
-                <Box sx={{ px: 2 }}>
+                <Box sx={{ px: 2, position: "relative" }}>
                   <Bar
                     options={barOptions}
                     data={data}
@@ -454,6 +455,49 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                         : false
                     }
                   />
+                  <Stack
+                    direction="row"
+                    justifyContent={"end"}
+                    alignItems={"center"}
+                    sx={{
+                      position: "absolute",
+                      width: "10rem",
+                      top: 0,
+                      right: 0,
+                    }}
+                  >
+                    <Typography variant="subtitle2">Ano</Typography>
+                    <FormControl
+                      variant="standard"
+                      sx={{
+                        m: 1,
+                        maxWidth: 60,
+
+                        top: 0,
+                        right: 0,
+                      }}
+                    >
+                      {/*  <InputLabel id="ano">Ano</InputLabel> */}
+                      <Select
+                        labelId="ano"
+                        id="ano"
+                        value={ano}
+                        onChange={(event) => setAno(event.target.value)}
+                        label="Ano"
+                        sx={{ fontSize: "13px" }}
+                      >
+                        <MenuItem sx={{ fontSize: "13px" }} value={2023}>
+                          2023
+                        </MenuItem>
+                        <MenuItem sx={{ fontSize: "13px" }} value={2022}>
+                          2022
+                        </MenuItem>
+                        <MenuItem sx={{ fontSize: "13px" }} value={2021}>
+                          2021
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Stack>
                 </Box>
               )}
               {/*  <Stack

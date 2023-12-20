@@ -16,7 +16,7 @@ import { useState } from "react";
 import CasaDashboard from "./components/CasaPanels/CasaDashboard";
 import { ToastContainer } from "react-toastify";
 function App() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <>

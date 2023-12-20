@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink, redirect, useLocation } from "react-router-dom";
-import { Box, IconButton, Typography, Paper } from "@mui/material";
+import { Box, IconButton, Typography, Paper, Tooltip } from "@mui/material";
 import { useSpring, animated } from "@react-spring/web";
 import Hamburger from "hamburger-react";
 import { useTheme } from "@mui/material/styles";
@@ -18,6 +18,7 @@ const VerticalMenu = ({ open, setOpen }) => {
   const downSm = useMediaQuery(theme.breakpoints.down("sm"));
   const upMd = useMediaQuery(theme.breakpoints.up("md"));
   const upLg = useMediaQuery(theme.breakpoints.up("lg"));
+  const location = useLocation();
 
   const menus = [
     {
@@ -103,6 +104,7 @@ const VerticalMenu = ({ open, setOpen }) => {
             textDecoration: "none",
             marginTop: "4rem",
             display: "flex",
+            maxHeight: "35px",
             width: open ? "14rem" : "6rem",
           }}
           to={menu.path}
@@ -110,21 +112,43 @@ const VerticalMenu = ({ open, setOpen }) => {
           {downSm ? (
             menu.icon
           ) : (
-            <Box
-              component={motion.div}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                boxSizing: "border-box",
-                px: 3,
-              }}
+            <Tooltip
+              title={
+                <Typography sx={{ fontSize: "12px", fontWeight: "bold" }}>
+                  {menu.title}
+                </Typography>
+              }
+              placement="right"
             >
-              {menu.icon}
+              <Box
+                component={motion.div}
+                sx={{
+                  display: "flex",
+                  justifyContent: "start",
+                  boxSizing: "border-box",
+                  px: 3,
+                  width: open ? "14rem" : "6rem",
 
-              <Typography component={animated.div} style={menuIsOpen}>
-                {menu.title}
-              </Typography>
-            </Box>
+                  borderLeft:
+                    location.pathname == menu.path
+                      ? open
+                        ? "7px solid black"
+                        : "5px solid white"
+                      : open && "1px solid white",
+
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    borderLeft: open ? "7px solid black" : "5px solid white",
+                  },
+                }}
+              >
+                {menu.icon}
+
+                <Typography component={animated.div} style={menuIsOpen}>
+                  {menu.title}
+                </Typography>
+              </Box>
+            </Tooltip>
           )}
         </NavLink>
       ))}

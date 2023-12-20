@@ -87,10 +87,12 @@ const FormAtividade = ({
       categoria: data?.categoria || "",
       nivelImportancia: data?.nivelImportancia || "",
       mesInsercao: "",
+      anoInsercao: 1900,
     },
     //validationSchema: ValidationSchema,
     onSubmit: (values) => {
       values.mesInsercao = months[new Date().getMonth()];
+      values.anoInsercao = new Date().getFullYear();
       card == "Casa"
         ? dispatch(setNewAtividadeCasa(values))
         : card == "Lazer"
@@ -102,12 +104,6 @@ const FormAtividade = ({
       formik.resetForm();
     },
   });
-  useEffect(() => {
-    /*  if (dataWasSubmitted) {
-      cleanForm(formik);
-      setDataWasSubmitted(false);
-    } */
-  }, [dataWasSubmitted]);
 
   return (
     <Dialog

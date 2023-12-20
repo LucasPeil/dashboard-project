@@ -14,8 +14,8 @@ const setNewAtividadeEducacao = async (data) => {
   return response.data;
 };
 
-const getAllAtividadesEducacao = async () => {
-  const config = {};
+const getAllAtividadesEducacao = async (options) => {
+  const config = { params: { ...options } };
 
   const response = await axios.get(API_URL, config);
 
@@ -32,12 +32,24 @@ const removeSingleAtividadeEducacao = async (id) => {
   const response = await axios.delete(API_URL + `/${id}`);
   return response.data;
 };
+const getCursosQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeCursos`);
+  return response.data;
+};
+const getLivrosQty = async () => {
+  const config = {};
+  const response = await axios.get(API_URL + `/quantidadeLivros`);
+  return response.data;
+};
 
 const educacaoService = {
   setNewAtividadeEducacao,
   getAllAtividadesEducacao,
   getSingleAtividadeEducacao,
   removeSingleAtividadeEducacao,
+  getCursosQty,
+  getLivrosQty,
 };
 
 export default educacaoService;

@@ -83,7 +83,7 @@ export const getSingleAtividade = createAsyncThunk(
     }
   }
 );
-export const removeSingleAtividde = createAsyncThunk(
+export const removeSingleAtividade = createAsyncThunk(
   "atividadesCasa/remove",
   async (id, thunkAPI) => {
     try {
@@ -283,12 +283,12 @@ export const casaSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(removeSingleAtividde.pending, (state) => {
+      .addCase(removeSingleAtividade.pending, (state) => {
         state.remove.isLoading = true;
         state.remove.isError = false;
         state.remove.isSuccess = false;
       })
-      .addCase(removeSingleAtividde.fulfilled, (state, action) => {
+      .addCase(removeSingleAtividade.fulfilled, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
@@ -300,7 +300,7 @@ export const casaSlice = createSlice({
 
         state.remove.message = action.payload.message;
       })
-      .addCase(removeSingleAtividde.rejected, (state, action) => {
+      .addCase(removeSingleAtividade.rejected, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isSuccess = false;
         state.remove.isError = true;

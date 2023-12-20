@@ -2,8 +2,9 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5101/api/visao-geral/dinheiroGasto";
 
-const getDinheiroGasto = async () => {
-  const config = {};
+const getDinheiroGasto = async (ano) => {
+  console.log(ano);
+  const config = { params: { ano: ano } };
 
   const response = await axios.get(API_URL, config);
   return response.data;

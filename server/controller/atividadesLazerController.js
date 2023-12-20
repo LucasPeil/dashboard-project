@@ -10,7 +10,7 @@ const getJogosQty = asyncHandler(async (req, res) => {
     categoria: "Jogos",
   }).exec();
 
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ jogosQuantidade: qty });
   } else {
     res.status(404);
@@ -21,7 +21,7 @@ const getCulturaQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: "Cultura",
   }).exec();
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ culturaQuantidade: qty });
   } else {
     res.status(404);
@@ -32,7 +32,8 @@ const getEmGrupoQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: "Em grupo",
   }).exec();
-  if (qty) {
+
+  if (typeof qty === "number") {
     res.status(200).json({ emGrupoQuantidade: qty });
   } else {
     res.status(404);
@@ -43,8 +44,9 @@ const getOutrosQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: "Outros",
   }).exec();
-  if (qty) {
-    res.status(200).json({ outosQuantidade: qty });
+
+  if (typeof qty === "number") {
+    res.status(200).json({ outrosQuantidade: qty });
   } else {
     res.status(404);
     throw new Error("Erro ao recuperar os dados");
@@ -81,7 +83,7 @@ const setNewAtividadeLazer = asyncHandler(async (req, res) => {
   }
 
   if (atividadeLazer) {
-    res.status(201).json(atividadeLazer);
+    res.status(201).json({ atividadeLazer, message });
   } else {
     res.status(400);
     throw new Error("Erro ao inserir dados");
@@ -94,7 +96,9 @@ const deleteAtividadeLazer = asyncHandler(async (req, res) => {
   const atividade = await AtividadesLazer.findByIdAndDelete(id);
 
   if (atividade) {
-    res.status(200).json(atividade);
+    res
+      .status(200)
+      .json({ atividade, message: "Atividade excluída com sucesso" });
   } else {
     res.status(400);
     throw new Error("Erro ao tentar excluir dados");

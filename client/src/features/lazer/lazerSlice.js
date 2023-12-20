@@ -99,9 +99,9 @@ export const getOutrosQty = createAsyncThunk(
 
 export const getAllAtividadesLazer = createAsyncThunk(
   "atividadesLazer/get",
-  async (thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
-      return await lazerService.getAllAtividadesLazer();
+      return await lazerService.getAllAtividadesLazer(params);
     } catch (error) {
       const message =
         (error.response &&
@@ -202,11 +202,12 @@ export const lazerSlice = createSlice({
         state.register.isLoading = true;
       })
       .addCase(setNewAtividadeLazer.fulfilled, (state, action) => {
-        state.register.isLoading = false;
         state.register.isError = false;
         state.register.isSuccess = true;
-        state.atividadeLazer = action.payload;
-        state.atividadesLazer.unshift(state.atividadeLazer);
+        state.register.message = action.payload.message;
+        state.atividadeLazer = action.payload.atividadeLazer;
+        state.atividadesLazer.documents.unshift(state.atividadeLazer);
+        state.register.isLoading = false;
       })
       .addCase(setNewAtividadeLazer.rejected, (state, action) => {
         state.register.isLoading = false;
@@ -326,9 +327,12 @@ export const lazerSlice = createSlice({
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
-        state.atividadesLazer = state.atividadesLazer.filter(
-          (atividade) => atividade._id !== action.payload._id
+        const idx = state.atividadesLazer.documents.findIndex(
+          (atividade) => atividade._id === action.payload.atividade._id
         );
+        state.atividadesLazer.documents.splice(idx, 1);
+
+        state.remove.message = action.payload.message;
       })
       .addCase(removeSingleAtividadeLazer.rejected, (state, action) => {
         state.remove.isLoading = false;

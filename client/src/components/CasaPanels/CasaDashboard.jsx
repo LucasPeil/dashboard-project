@@ -12,15 +12,6 @@ import {
   Stack,
   useMediaQuery,
 } from "@mui/material";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +22,7 @@ import {
   getComprasQty,
   getLimpezaQty,
   getRefeicoesQty,
-  removeSingleAtividde,
+  removeSingleAtividade,
   resetRegisterCasa,
   resetRemoveCasa,
   setOpenModalCasa,
@@ -46,14 +37,23 @@ import SingleAtividade from "./SingleAtividade";
 import { toast } from "react-toastify";
 
 const CasaDashboard = ({ open, setOpen }) => {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-  );
+  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
+  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
+  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
+  const [selectedRow, setSelectedRow] = useState();
+  const [categorySelected, setCategorySelected] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortDirection, setSortDirection] = useState(1);
+  const [prop, setProp] = useState("_id");
+  const [filter, setFilter] = useState("");
+  const theme = useTheme();
+  const downMd = useMediaQuery(theme.breakpoints.down("md"));
+  const [categoryCardSelected, setCategoryCardSelected] = useState([
+    false,
+    false,
+    false,
+  ]);
   const dispatch = useDispatch();
   const {
     atividadesCasa,
@@ -65,15 +65,6 @@ const CasaDashboard = ({ open, setOpen }) => {
     quantidadeCompras,
     quantidadeRefeicoes,
   } = useSelector((state) => state.atividadesCasa);
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortDirection, setSortDirection] = useState(1);
-  const [prop, setProp] = useState("_id");
-  const [filter, setFilter] = useState("");
-  const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down("md"));
-  const [comprasSelected, setComprasSelected] = useState([false, false, false]);
 
   useEffect(() => {
     if (register.isSuccess) {
@@ -129,7 +120,7 @@ const CasaDashboard = ({ open, setOpen }) => {
           </IconButton>
           <IconButton
             onClick={() => {
-              dispatch(removeSingleAtividde(row._id));
+              dispatch(removeSingleAtividade(row._id));
             }}
           >
             <DeleteTwoToneIcon color="error" />
@@ -139,11 +130,6 @@ const CasaDashboard = ({ open, setOpen }) => {
     },
   ];
 
-  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
-  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
-  const [selectedRow, setSelectedRow] = useState();
-  const [categorySelected, setCategorySelected] = useState("");
   useEffect(() => {
     dispatch(
       getAllAtividadesCasa({
@@ -174,7 +160,7 @@ const CasaDashboard = ({ open, setOpen }) => {
           handleCloseModal={closeModalCasa}
           title={"Nova Atividade Doméstica"}
           btnColor="#0c264e"
-          btnHoverColor="#000000"
+          btnHoverColor="#031426"
           categoriaItens={["Compras", "Limpeza", "Refeições"]}
           card={"Casa"}
           cleanForm={cleanForm}
@@ -187,6 +173,7 @@ const CasaDashboard = ({ open, setOpen }) => {
             rowData={selectedRow}
             openSingleAtividade={openSingleAtividade}
             handleCloseSingleAtividade={handleCloseSingleAtividade}
+            iconColor={"#0a1e73"}
           />
         )}
 
@@ -212,8 +199,8 @@ const CasaDashboard = ({ open, setOpen }) => {
             <DashboardsHeaders
               setCategorySelected={setCategorySelected}
               categorySelected={categorySelected}
-              active={comprasSelected}
-              setActive={setComprasSelected}
+              active={categoryCardSelected}
+              setActive={setCategoryCardSelected}
               title={"DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS"}
               openModal={() => dispatch(setOpenModalCasa())}
             />
@@ -231,8 +218,8 @@ const CasaDashboard = ({ open, setOpen }) => {
             >
               <CategoryCards
                 idx={0}
-                active={comprasSelected}
-                setActive={setComprasSelected}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
                 distance={5}
                 classLabel="category-banner-casa"
                 qty={quantidadeCompras}
@@ -255,8 +242,8 @@ const CasaDashboard = ({ open, setOpen }) => {
               />
               <CategoryCards
                 idx={1}
-                active={comprasSelected}
-                setActive={setComprasSelected}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
                 distance={15}
                 classLabel="category-banner-casa"
                 qty={quantidadeLimpeza}
@@ -279,8 +266,8 @@ const CasaDashboard = ({ open, setOpen }) => {
               />
               <CategoryCards
                 idx={2}
-                active={comprasSelected}
-                setActive={setComprasSelected}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
                 distance={5}
                 classLabel="category-banner-casa"
                 qty={quantidadeRefeicoes}
@@ -333,7 +320,9 @@ const CasaDashboard = ({ open, setOpen }) => {
                   className="table"
                   columns={tableColumns}
                   data={atividadesCasa.documents}
-                  customStyles={customStyles}
+                  customStyles={customStyles({
+                    backgroundColor: "#D6E8FB",
+                  })}
                   subHeader
                   subHeaderComponent={
                     <SearchBar setFilter={setFilter} filter={filter} />
@@ -344,6 +333,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                   pointerOnHover
                   fixedHeader
                   responsive
+                  highlightOnHover
                   progressPending={isLoading}
                   progressComponent={<ProgressComponent limit={limit} />}
                   paginationTotalRows={atividadesCasa.total}
@@ -365,6 +355,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                         prop: prop,
                         sortDirection: sortDirection,
                         filter: filter,
+                        categorySelected: categorySelected,
                       })
                     );
                     setPage(newPage);
@@ -377,6 +368,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                         prop: prop,
                         sortDirection: sortDirection,
                         filter: filter,
+                        categorySelected: categorySelected,
                       })
                     );
                     setLimit(newLimit);

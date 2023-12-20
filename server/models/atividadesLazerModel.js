@@ -25,6 +25,10 @@ const atividadesLazerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  anoInsercao: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("AtividadesLazer", atividadesLazerSchema);

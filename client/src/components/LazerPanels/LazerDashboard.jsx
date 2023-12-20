@@ -2,74 +2,187 @@ import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 import {
   Box,
   Grid,
+  IconButton,
   Paper,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import React, { useEffect, useState } from "react";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
-import {
-  ArcElement,
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../styles/stylesConst";
-
 import { useTheme } from "@emotion/react";
 import SearchBar from "../SearchBar";
 import CategoryCards from "../CategoryCards";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllAtividadesLazer } from "../../features/lazer/lazerSlice";
+import { toast } from "react-toastify";
+import {
+  getAllAtividadesLazer,
+  getCulturaQty,
+  getJogosQty,
+  getEmGrupoQty,
+  getOutrosQty,
+  closeModalLazer,
+  removeSingleAtividadeLazer,
+  resetRegisterLazer,
+  resetRemoveLazer,
+  setOpenModalLazer,
+} from "../../features/lazer/lazerSlice";
 import MotionDiv from "../../MotionDiv";
+import FormAtividade from "../FormAtividade";
+import SingleAtividade from "../CasaPanels/SingleAtividade";
+import DashboardsHeaders from "../DashboardsHeaders";
+import ProgressComponent from "../ProgressComponent";
 const LazerDashboard = ({ open }) => {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-  );
   const dispatch = useDispatch();
+  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
+  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
+  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortDirection, setSortDirection] = useState(1);
+  const [prop, setProp] = useState("_id");
+  const [filter, setFilter] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const [selectedRow, setSelectedRow] = useState();
+  const [categoryCardSelected, setCategoryCardSelected] = useState([
+    false,
+    false,
+    false,
+  ]);
+  const [categorySelected, setCategorySelected] = useState("");
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down("md"));
-  ChartJS.register(ArcElement, Tooltip, Legend);
-  const [imageToDisplay, setImageToDisplay] = useState();
-  const [showArrow, setShowArrow] = useState(false);
+  const {
+    atividadesLazer,
+    openModalLazer,
+    isLoading,
+    register,
+    remove,
+    quantidadeJogos,
+    quantidadeOutros,
+    quantidadeCultura,
+    quantidadeEmGrupo,
+  } = useSelector((state) => state.atividadesLazer);
+
   useEffect(() => {
-    dispatch(getAllAtividadesLazer());
-  }, []);
-  const { atividadesLazer } = useSelector((state) => state.atividadesLazer);
+    if (register.isSuccess) {
+      toast.success(register.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else if (remove.isSuccess) {
+      toast.success(remove.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    }
+    dispatch(getCulturaQty());
+    dispatch(getEmGrupoQty());
+    dispatch(getJogosQty());
+    dispatch(getOutrosQty());
+    return () => {
+      dispatch(resetRemoveLazer());
+      dispatch(resetRegisterLazer());
+    };
+  }, [register, remove]);
+  useEffect(() => {
+    dispatch(
+      getAllAtividadesLazer({
+        page: page,
+        limit: limit,
+        prop: prop,
+        sortDirection: sortDirection,
+        filter: filter,
+        categorySelected: categorySelected,
+      })
+    );
+  }, [register, remove, filter, categorySelected]);
+
   const tableColumns = [
     {
-      name: "Título",
+      name: "Nome da atividade",
+      width: "45%",
       selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
       name: "Descrição",
-      selector: (row) => row.descricaoAtividade,
+      width: "45%",
+      cell: (row) => row.descricaoAtividade,
       sortable: true,
+    },
+
+    {
+      name: "Ações",
+      width: "10%",
+      cell: (row) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <IconButton
+            onClick={() => {
+              setSelectedRow(row);
+
+              dispatch(setOpenModalLazer());
+            }}
+          >
+            <EditTwoToneIcon color="success" />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(removeSingleAtividadeLazer(row._id));
+            }}
+          >
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
+        </Box>
+      ),
     },
   ];
 
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const cleanForm = (form) => {
+    form.setFieldValue("nomeAtividade", "");
+    form.setFieldValue("categoria", "");
+    form.setFieldValue("descricaoAtividade", "");
+    form.setFieldValue("tempoGasto", "");
+    form.setFieldValue("dinheiroGasto", "");
+    form.setFieldValue("nivelImportância", "");
+  };
   // 15 30 20 10
   return (
     <MotionDiv>
       <Box sx={{ display: "flex", justifyContent: "end" }}>
+        <FormAtividade
+          openModal={openModalLazer}
+          handleCloseModal={closeModalLazer}
+          title={"Nova Atividade De Lazer"}
+          btnColor="#f4b26a"
+          btnHoverColor="#E39F54"
+          categoriaItens={["Jogos", "Cultura", "Em grupo", "Outros"]}
+          card={"Lazer"}
+          cleanForm={cleanForm}
+          data={selectedRow}
+        />
+        {/* MODAL SINGLE ATIVIDADE */}
+        {openSingleAtividade && (
+          <SingleAtividade
+            rowData={selectedRow}
+            openSingleAtividade={openSingleAtividade}
+            handleCloseSingleAtividade={handleCloseSingleAtividade}
+            iconColor={"#D67F20"}
+          />
+        )}
         <Box
           sx={{
             transition: "all 0.5s ease",
@@ -89,33 +202,19 @@ const LazerDashboard = ({ open }) => {
             }}
             style={{}}
           >
+            <DashboardsHeaders
+              setCategorySelected={setCategorySelected}
+              categorySelected={categorySelected}
+              active={categoryCardSelected}
+              setActive={setCategoryCardSelected}
+              title={"DETALHES SOBRE AS ATIVIDADES DE LAZER"}
+              openModal={() => dispatch(setOpenModalLazer())}
+            />
             <Stack
               direction={"column"}
               justifyContent={"space-between"}
               alignItems={"space-between"}
-            >
-              <Box
-                sx={{
-                  borderBottom: "1px solid #D8D8D8",
-                  pb: 1,
-                  pt: 4,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  component="h2"
-                  sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
-                >
-                  DETALHES SOBRE SEU LAZER
-                </Typography>
-
-                <CelebrationOutlinedIcon
-                  sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
-                />
-              </Box>
-            </Stack>
+            ></Stack>
             <Stack
               direction={downMd ? "column" : "row"}
               spacing={10}
@@ -128,10 +227,16 @@ const LazerDashboard = ({ open }) => {
               }}
             >
               <CategoryCards
+                idx={0}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={5}
                 classLabel="category-banner-lazer"
-                qty={32}
+                qty={quantidadeJogos}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Jogos"
-                description={"Descrição qualquer..."}
+                description={"Veja os jogos que voce participou..."}
                 bgcolor={"#f4b26a"}
                 icon={
                   <SportsEsportsOutlinedIcon
@@ -144,10 +249,16 @@ const LazerDashboard = ({ open }) => {
                 }
               />
               <CategoryCards
+                idx={1}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={15}
                 classLabel="category-banner-lazer"
-                qty={32}
+                qty={quantidadeCultura}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Cultura"
-                description={"Descrição qualquer..."}
+                description={"As mais variadas atividades culturais..."}
                 bgcolor={"#f4b26a"}
                 icon={
                   <BookOutlinedIcon
@@ -160,10 +271,16 @@ const LazerDashboard = ({ open }) => {
                 }
               />
               <CategoryCards
+                idx={2}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={5}
                 classLabel="category-banner-lazer"
-                qty={32}
+                qty={quantidadeEmGrupo}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Em grupo"
-                description={"Descrição qualquer..."}
+                description={"Eventos sociais em que você marcou presença..."}
                 bgcolor={"#f4b26a"}
                 icon={
                   <GroupsOutlinedIcon
@@ -176,10 +293,16 @@ const LazerDashboard = ({ open }) => {
                 }
               />
               <CategoryCards
+                idx={3}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={5}
                 classLabel="category-banner-lazer"
-                qty={32}
+                qty={quantidadeOutros}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Outros"
-                description={"Descrição qualquer..."}
+                description={"Outras atividades de lazer..."}
                 bgcolor={"#f4b26a"}
                 icon={
                   <CelebrationOutlinedIcon
@@ -218,49 +341,68 @@ const LazerDashboard = ({ open }) => {
                   }}
                 ></Box>
               </Grid>
+
               <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
                 <DataTable
                   className="table"
                   columns={tableColumns}
-                  data={atividadesLazer}
-                  customStyles={customStyles}
+                  data={atividadesLazer.documents}
+                  customStyles={customStyles({
+                    backgroundColor: "#FBE9D6",
+                  })}
+                  highlightOnHover
                   subHeader
-                  subHeaderComponent={<SearchBar />}
+                  subHeaderComponent={
+                    <SearchBar setFilter={setFilter} filter={filter} />
+                  }
                   striped
                   pagination
                   paginationServer
+                  pointerOnHover
+                  fixedHeader
+                  responsive
+                  progressPending={isLoading}
+                  progressComponent={<ProgressComponent limit={limit} />}
+                  paginationTotalRows={atividadesLazer.total}
+                  onRowClicked={(row) => {
+                    setSelectedRow(row);
+                    setOpenSingleAtividade(true);
+                  }}
                   paginationComponentOptions={{
                     rowsPerPageText: "Itens por página",
                     rangeSeparatorText: "de",
                     selectAllRowsItem: true,
                     selectAllRowsItemText: "Todos",
                   }}
+                  onChangePage={(newPage) => {
+                    dispatch(
+                      getAllAtividadesLazer({
+                        page: newPage,
+                        limit: limit,
+                        prop: prop,
+                        sortDirection: sortDirection,
+                        filter: filter,
+                        categorySelected: categorySelected,
+                      })
+                    );
+                    setPage(newPage);
+                  }}
+                  onChangeRowsPerPage={(newLimit) => {
+                    dispatch(
+                      getAllAtividadesLazer({
+                        page: page,
+                        limit: newLimit,
+                        prop: prop,
+                        sortDirection: sortDirection,
+                        filter: filter,
+                        categorySelected: categorySelected,
+                      })
+                    );
+                    setLimit(newLimit);
+                  }}
                 />
               </Grid>
             </Grid>
-
-            {/*  <Stack
-              sx={{
-                px: 4,
-                my: 3,
-                zIndex: 20000000000000,
-              }}
-              direction={"row"}
-              justifyContent={"end"}
-            >
-                   <Button
-                sx={{ display: "flex", justifyContent: "space-around" }}
-                onMouseOver={() => setShowArrow(true)}
-                onMouseOut={() => setShowArrow(false)}
-                className="relatorioButton"
-              >
-                <Typography className="buttonLabel">
-                  Ver Gastos mensais
-                </Typography>
-
-                {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
-              </Button> 
-            </Stack> */}
           </Paper>
         </Box>
       </Box>

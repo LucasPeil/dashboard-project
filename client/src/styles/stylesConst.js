@@ -1,4 +1,4 @@
-export const customStyles = {
+export const customStyles = (highlightOnHover) => ({
   table: {
     style: {
       overflow: "auto",
@@ -11,7 +11,15 @@ export const customStyles = {
       display: "flex",
       justifyContent: "space-between",
     },
+    highlightOnHoverStyle: {
+      ...highlightOnHover,
+    },
+    selectedHighlightStyle: {
+      color: "rgba (157, 157, 157, 1)",
+      backgroundColor: "rgba (157, 157, 157, 1)",
+    },
   },
+
   subHeader: {
     style: {
       minHeight: "52px",
@@ -41,4 +49,4 @@ export const customStyles = {
       left: 0,
     },
   },
-};
+});

@@ -30,7 +30,11 @@ const getTempoGasto = asyncHandler(async (req, res) => {
   res.status(200).json({ tempoCasaSum, tempoLazerSum, tempoEducacaoSum });
 });
 const getDinheiroGasto = asyncHandler(async (req, res) => {
+  const ano = parseInt(req.query.ano);
   const dinheiroCasaMes = await AtividadesCasa.aggregate([
+    {
+      $match: { anoInsercao: { $eq: ano } },
+    },
     {
       $group: {
         _id: { mes: "$mesInsercao" },
@@ -41,6 +45,9 @@ const getDinheiroGasto = asyncHandler(async (req, res) => {
 
   const dinheiroEducacaoMes = await AtividadesEducacao.aggregate([
     {
+      $match: { anoInsercao: { $eq: ano } },
+    },
+    {
       $group: {
         _id: { mes: "$mesInsercao" },
         totalAmount: { $sum: "$dinheiroGasto" },
@@ -49,14 +56,15 @@ const getDinheiroGasto = asyncHandler(async (req, res) => {
   ]);
   const dinheiroLazerMes = await AtividadesLazer.aggregate([
     {
+      $match: { anoInsercao: { $eq: ano } },
+    },
+    {
       $group: {
         _id: { mes: "$mesInsercao" },
         totalAmount: { $sum: "$dinheiroGasto" },
       },
     },
   ]);
-
-  console.log(dinheiroCasaMes);
 
   res
     .status(200)

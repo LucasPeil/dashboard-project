@@ -15,16 +15,19 @@ const initialState = {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
   update: {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
   remove: {
     isSuccess: false,
     isLoading: false,
     isError: false,
+    message: "",
   },
 
   message: "",
@@ -63,9 +66,9 @@ export const getLivrosQty = createAsyncThunk(
 );
 export const getAllAtividadesEducacao = createAsyncThunk(
   "atividadesEducacao/get",
-  async (thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
-      return await educacaoService.getAllAtividadesEducacao();
+      return await educacaoService.getAllAtividadesEducacao(params);
     } catch (error) {
       const message =
         (error.response &&
@@ -166,11 +169,12 @@ export const educacaoSlice = createSlice({
         state.register.isLoading = true;
       })
       .addCase(setNewAtividadeEducacao.fulfilled, (state, action) => {
-        state.register.isLoading = false;
         state.register.isError = false;
         state.register.isSuccess = true;
-        state.atividadeEducacao = action.payload;
-        state.atividadesEducacao.unshift(state.atividadeEducacao);
+        state.register.message = action.payload.message;
+        state.atividadeEducacao = action.payload.atividadeEducacao;
+        state.atividadesEducacao.documents.unshift(state.atividadeEducacao);
+        state.register.isLoading = false;
       })
       .addCase(setNewAtividadeEducacao.rejected, (state, action) => {
         state.register.isLoading = false;
@@ -256,9 +260,12 @@ export const educacaoSlice = createSlice({
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
-        state.atividadesEducacao = state.atividadesEducacao.filter(
-          (atividade) => atividade._id !== action.payload._id
+        const idx = state.atividadesEducacao.documents.findIndex(
+          (atividade) => atividade._id === action.payload.atividade._id
         );
+        state.atividadesEducacao.documents.splice(idx, 1);
+
+        state.remove.message = action.payload.message;
       })
       .addCase(removeSingleAtividadeEducacao.rejected, (state, action) => {
         state.remove.isLoading = false;

@@ -10,7 +10,7 @@ const getCursosQty = asyncHandler(async (req, res) => {
     categoria: "Cursos",
   }).exec();
 
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ cursosQuantidade: qty });
   } else {
     res.status(404);
@@ -21,7 +21,7 @@ const getLivrosQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesEducacao.countDocuments({
     categoria: "Livros",
   }).exec();
-  if (qty) {
+  if (typeof qty === "number") {
     res.status(200).json({ livrosQuantidade: qty });
   } else {
     res.status(404);
@@ -55,9 +55,9 @@ const setNewAtividadeEducacao = asyncHandler(async (req, res) => {
     atividadeEducacao = await atividadeEducacao.save();
     message = "Aividade registrada com sucesso.";
   }
-  console.log(message);
+
   if (atividadeEducacao) {
-    res.status(201).json(atividadeEducacao);
+    res.status(201).json({ atividadeEducacao, message });
   } else {
     res.status(400);
     throw new Error("Erro ao inserir dados");
@@ -70,7 +70,9 @@ const deleteAtividadeEducacao = asyncHandler(async (req, res) => {
   const atividade = await AtividadesEducacao.findByIdAndDelete(id);
 
   if (atividade) {
-    res.status(200).json(atividade);
+    res
+      .status(200)
+      .json({ atividade, message: "Atividade excluída com sucesso" });
   } else {
     res.status(400);
     throw new Error("Erro ao tentar excluir dados");

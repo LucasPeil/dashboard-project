@@ -1,57 +1,98 @@
-import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
-import RamenDiningOutlinedIcon from "@mui/icons-material/RamenDiningOutlined";
-import LocalLaundryServiceOutlinedIcon from "@mui/icons-material/LocalLaundryServiceOutlined";
 import CastForEducationOutlinedIcon from "@mui/icons-material/CastForEducationOutlined";
-import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import { useSelector, useDispatch } from "react-redux";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import {
   Box,
   Grid,
+  IconButton,
   Paper,
   Stack,
-  Typography,
   useMediaQuery,
 } from "@mui/material";
-import {
-  ArcElement,
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
+import { toast } from "react-toastify";
+import { useTheme } from "@emotion/react";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { customStyles } from "../../styles/stylesConst";
-
-import { useTheme } from "@emotion/react";
-import CategoryCards from "../CategoryCards";
-import SearchBar from "../SearchBar";
-import { getAllAtividadesEducacao } from "../../features/educacao/educacaoSlice";
+import { useDispatch, useSelector } from "react-redux";
 import MotionDiv from "../../MotionDiv";
+import {
+  closeModalEducacao,
+  getAllAtividadesEducacao,
+  getCursosQty,
+  getLivrosQty,
+  removeSingleAtividadeEducacao,
+  resetRegisterEducacao,
+  resetRemoveEducacao,
+  setOpenModalEducacao,
+} from "../../features/educacao/educacaoSlice";
+import { customStyles } from "../../styles/stylesConst";
+import SingleAtividade from "../CasaPanels/SingleAtividade";
+import CategoryCards from "../CategoryCards";
+import DashboardsHeaders from "../DashboardsHeaders";
+import FormAtividade from "../FormAtividade";
+import ProgressComponent from "../ProgressComponent";
+import SearchBar from "../SearchBar";
 const EducacaoDashboard = ({ open }) => {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-  );
-
-  ChartJS.register(ArcElement, Tooltip, Legend);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllAtividadesEducacao());
-  }, []);
-
-  const { atividadesEducacao } = useSelector(
-    (state) => state.atividadesEducacao
-  );
+  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
+  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
+  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortDirection, setSortDirection] = useState(1);
+  const [prop, setProp] = useState("_id");
+  const [filter, setFilter] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [selectedRow, setSelectedRow] = useState();
+  const [categoryCardSelected, setCategoryCardSelected] = useState([
+    false,
+    false,
+  ]);
+  const [categorySelected, setCategorySelected] = useState("");
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down("md"));
+  const {
+    atividadesEducacao,
+    openModalEducacao,
+    isLoading,
+    register,
+    remove,
+    quantidadeCursos,
+    quantidadeLivros,
+  } = useSelector((state) => state.atividadesEducacao);
+  useEffect(() => {
+    if (register.isSuccess) {
+      toast.success(register.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else if (remove.isSuccess) {
+      toast.success(remove.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    }
+
+    dispatch(getCursosQty());
+    dispatch(getLivrosQty());
+    return () => {
+      dispatch(resetRegisterEducacao());
+      dispatch(resetRemoveEducacao());
+    };
+  }, [register, remove]);
+  useEffect(() => {
+    dispatch(
+      getAllAtividadesEducacao({
+        page: page,
+        limit: limit,
+        prop: prop,
+        sortDirection: sortDirection,
+        filter: filter,
+        categorySelected: categorySelected,
+      })
+    );
+  }, [register, remove, filter, categorySelected]);
   const tableColumns = [
     {
       name: "Título",
@@ -63,15 +104,70 @@ const EducacaoDashboard = ({ open }) => {
       selector: (row) => row.descricaoAtividade,
       sortable: true,
     },
+    {
+      name: "Ações",
+      width: "10%",
+      cell: (row) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <IconButton
+            onClick={() => {
+              setSelectedRow(row);
+
+              dispatch(setOpenModalEducacao());
+            }}
+          >
+            <EditTwoToneIcon color="success" />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(removeSingleAtividadeEducacao(row._id));
+            }}
+          >
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
+        </Box>
+      ),
+    },
   ];
 
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  // 15 30 20 10
+  const cleanForm = (form) => {
+    form.setFieldValue("nomeAtividade", "");
+    form.setFieldValue("categoria", "");
+    form.setFieldValue("descricaoAtividade", "");
+    form.setFieldValue("tempoGasto", "");
+    form.setFieldValue("dinheiroGasto", "");
+    form.setFieldValue("nivelImportância", "");
+  };
+
   return (
     <MotionDiv>
       <Box sx={{ display: "flex", justifyContent: "end" }}>
+        <FormAtividade
+          openModal={openModalEducacao}
+          handleCloseModal={closeModalEducacao}
+          title={"Nova Atividade Educação"}
+          btnColor="#648d64"
+          btnHoverColor="#4E7A4E"
+          categoriaItens={["Cursos", "Livros"]}
+          card={"Educação"}
+          cleanForm={cleanForm}
+          data={selectedRow}
+        />
+        {/* MODAL SINGLE ATIVIDADE */}
+        {openSingleAtividade && (
+          <SingleAtividade
+            rowData={selectedRow}
+            openSingleAtividade={openSingleAtividade}
+            handleCloseSingleAtividade={handleCloseSingleAtividade}
+            iconColor={"#1D791D"}
+            isAtividadeEducacao={true}
+          />
+        )}
         <Box
           sx={{
             transition: "all 0.5s ease",
@@ -91,33 +187,15 @@ const EducacaoDashboard = ({ open }) => {
             }}
             style={{}}
           >
-            <Stack
-              direction={"column"}
-              justifyContent={"space-between"}
-              alignItems={"space-between"}
-            >
-              <Box
-                sx={{
-                  borderBottom: "1px solid #D8D8D8",
-                  pb: 1,
-                  pt: 4,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  component="h2"
-                  sx={{ fontWeight: 600, color: "#D8D8D8", fontSize: "2.4rem" }}
-                >
-                  DETALHES SOBRE SUA EDUCAÇÃO
-                </Typography>
+            <DashboardsHeaders
+              setCategorySelected={setCategorySelected}
+              categorySelected={categorySelected}
+              active={categoryCardSelected}
+              setActive={setCategoryCardSelected}
+              title={"DETALHES SOBRE SUA EDUCAÇÃO"}
+              openModal={() => dispatch(setOpenModalEducacao())}
+            />
 
-                <SchoolOutlinedIcon
-                  sx={{ fontSize: "3.1rem", color: "#d8d8d8" }}
-                />
-              </Box>
-            </Stack>
             <Stack
               direction={downMd ? "column" : "row"}
               spacing={10}
@@ -131,10 +209,16 @@ const EducacaoDashboard = ({ open }) => {
               }}
             >
               <CategoryCards
+                idx={0}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={5}
                 classLabel="category-banner-educacao"
-                qty={32}
+                qty={quantidadeCursos}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Cursos"
-                description={"Descrição qualquer..."}
+                description={"Veja quais cursos você assistiu..."}
                 bgcolor={"#648d64"}
                 icon={
                   <CastForEducationOutlinedIcon
@@ -147,10 +231,16 @@ const EducacaoDashboard = ({ open }) => {
                 }
               />
               <CategoryCards
+                idx={1}
+                active={categoryCardSelected}
+                setActive={setCategoryCardSelected}
+                distance={5}
                 classLabel="category-banner-educacao"
-                qty={32}
+                qty={quantidadeLivros}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
                 title="Livros"
-                description={"Descrição qualquer..."}
+                description={"Dê uma olhada nos livros lidos nesse mês..."}
                 bgcolor={"#648d64"}
                 icon={
                   <MenuBookOutlinedIcon
@@ -193,18 +283,59 @@ const EducacaoDashboard = ({ open }) => {
                 <DataTable
                   className="table"
                   columns={tableColumns}
-                  data={atividadesEducacao}
-                  customStyles={customStyles}
+                  data={atividadesEducacao.documents}
+                  customStyles={customStyles({
+                    backgroundColor: "#CEF4CE",
+                  })}
+                  highlightOnHover
                   subHeader
-                  subHeaderComponent={<SearchBar />}
+                  subHeaderComponent={
+                    <SearchBar setFilter={setFilter} filter={filter} />
+                  }
                   striped
                   pagination
                   paginationServer
+                  pointerOnHover
+                  fixedHeader
+                  responsive
+                  progressPending={isLoading}
+                  progressComponent={<ProgressComponent limit={limit} />}
+                  paginationTotalRows={atividadesEducacao.total}
+                  onRowClicked={(row) => {
+                    setSelectedRow(row);
+                    setOpenSingleAtividade(true);
+                  }}
                   paginationComponentOptions={{
                     rowsPerPageText: "Itens por página",
                     rangeSeparatorText: "de",
                     selectAllRowsItem: true,
                     selectAllRowsItemText: "Todos",
+                  }}
+                  onChangePage={(newPage) => {
+                    dispatch(
+                      getAllAtividadesEducacao({
+                        page: newPage,
+                        limit: limit,
+                        prop: prop,
+                        sortDirection: sortDirection,
+                        filter: filter,
+                        categorySelected: categorySelected,
+                      })
+                    );
+                    setPage(newPage);
+                  }}
+                  onChangeRowsPerPage={(newLimit) => {
+                    dispatch(
+                      getAllAtividadesEducacao({
+                        page: page,
+                        limit: newLimit,
+                        prop: prop,
+                        sortDirection: sortDirection,
+                        filter: filter,
+                        categorySelected: categorySelected,
+                      })
+                    );
+                    setLimit(newLimit);
                   }}
                 />
               </Grid>
