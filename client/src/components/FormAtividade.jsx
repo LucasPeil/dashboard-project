@@ -20,8 +20,14 @@ import { Field, Form, Formik, FormikProvider, useFormik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import { setNewAtividadeCasa } from "../features/casa/casaSlice";
-import { setNewAtividadeLazer } from "../features/lazer/lazerSlice";
+import {
+  resetRegisterCasa,
+  setNewAtividadeCasa,
+} from "../features/casa/casaSlice";
+import {
+  resetRegisterLazer,
+  setNewAtividadeLazer,
+} from "../features/lazer/lazerSlice";
 import {
   resetRegisterEducacao,
   setNewAtividadeEducacao,
@@ -101,6 +107,9 @@ const FormAtividade = ({
       dispatch(handleCloseModal());
 
       setDataWasSubmitted(true);
+      dispatch(resetRegisterEducacao());
+      dispatch(resetRegisterCasa());
+      dispatch(resetRegisterLazer());
       formik.resetForm();
     },
   });

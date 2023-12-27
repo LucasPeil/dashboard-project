@@ -15,25 +15,27 @@ import VerticalMenu from "./components/VerticalMenu";
 import { useState } from "react";
 import CasaDashboard from "./components/CasaPanels/CasaDashboard";
 import { ToastContainer } from "react-toastify";
+import Login from "./components/Login";
+
 function App() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <BrowserRouter basename="/">
-        <VerticalMenu open={open} setOpen={setOpen} />
+      <VerticalMenu open={open} setOpen={setOpen} />
 
-        <Routes>
-          <Route
-            path="/visao-geral"
-            element={<VisaoGeralDashboard open={open} setOpen={setOpen} />}
-          />
-          <Route path="/" element={<Navigate to="/visao-geral" replace />} />
-          <Route path="/educacao" element={<EducacaoDashboard open={open} />} />
-          <Route path="/casa" element={<CasaDashboard open={open} />} />
-          <Route path="/lazer" element={<LazerDashboard open={open} />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route
+          path="/visao-geral"
+          element={<VisaoGeralDashboard open={open} setOpen={setOpen} />}
+        />
+        <Route path="/" element={<Navigate to="/visao-geral" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/educacao" element={<EducacaoDashboard open={open} />} />
+        <Route path="/casa" element={<CasaDashboard open={open} />} />
+        <Route path="/lazer" element={<LazerDashboard open={open} />} />
+      </Routes>
+
       <ToastContainer
         position="bottom-left"
         autoClose={5000}

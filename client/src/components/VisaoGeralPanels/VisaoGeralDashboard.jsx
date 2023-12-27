@@ -14,6 +14,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  useMediaQuery,
 } from "@mui/material";
 import {
   ArcElement,
@@ -32,16 +33,19 @@ import { toast } from "react-toastify";
 import MotionDiv from "../../MotionDiv";
 import {
   closeModalCasa,
+  getAllAtividadesCasa,
   resetRegisterCasa,
   setOpenModalCasa,
 } from "../../features/casa/casaSlice";
 import {
   closeModalEducacao,
+  getAllAtividadesEducacao,
   resetRegisterEducacao,
   setOpenModalEducacao,
 } from "../../features/educacao/educacaoSlice";
 import {
   closeModalLazer,
+  getAllAtividadesLazer,
   resetRegisterLazer,
   setOpenModalLazer,
 } from "../../features/lazer/lazerSlice";
@@ -63,17 +67,21 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [ano, setAno] = useState(2023);
-  const { openModalCasa, register } = useSelector(
-    (state) => state.atividadesCasa
-  );
+  const downLg = useMediaQuery(theme.breakpoints.down("lg"));
   const { openModalLazer } = useSelector((state) => state.atividadesLazer);
   const { openModalEducacao } = useSelector(
     (state) => state.atividadesEducacao
   );
-  const { dinheiroGasto } = useSelector((state) => state.dinheiroGasto);
-  const { register: registerCasa, update: updateCasa } = useSelector(
-    (state) => state.atividadesCasa
+  const { dinheiroGasto, isSuccess: dinheiroGastoIsSuccess } = useSelector(
+    (state) => state.dinheiroGasto
   );
+  const {
+    register: registerCasa,
+    update: updateCasa,
+    atividadesCasa,
+    openModalCasa,
+  } = useSelector((state) => state.atividadesCasa);
+
   const { register: registerLazer, update: updateLazer } = useSelector(
     (state) => state.atividadesLazer
   );
@@ -121,6 +129,39 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     registerLazer.isSuccess,
     registerEducacao.isSuccess,
   ]);
+  useEffect(() => {
+    dispatch(
+      getAllAtividadesCasa({
+        page: 1,
+        limit: 5,
+        prop: "_id",
+        sortDirection: "asc",
+        filter: "",
+        categorySelected: "",
+      })
+    );
+
+    dispatch(
+      getAllAtividadesEducacao({
+        page: 1,
+        limit: 5,
+        prop: "_id",
+        sortDirection: "asc",
+        filter: "",
+        categorySelected: "",
+      })
+    );
+    dispatch(
+      getAllAtividadesLazer({
+        page: 1,
+        limit: 5,
+        prop: "_id",
+        sortDirection: "asc",
+        filter: "",
+        categorySelected: "",
+      })
+    );
+  }, []);
 
   const barOptions = {
     responsive: true,
@@ -236,12 +277,24 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const [showAddIcon, setShowAddIcon] = useState([true, true, true]);
 
   useEffect(() => {
-    if (register.isSuccess) {
-      toast.success(register.message, {
+    if (registerCasa.isSuccess) {
+      toast.success(registerCasa.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else if (registerEducacao.isSuccess) {
+      toast.success(registerEducacao.message, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else if (registerLazer.isSuccess) {
+      toast.success(registerLazer.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
-  }, [register.isSuccess]);
+  }, [
+    registerCasa.isSuccess,
+    registerEducacao.isSuccess,
+    registerLazer.isSuccess,
+  ]);
   // 15 30 20 10
 
   return (
@@ -284,13 +337,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
             width: open ? "calc(100% - 14rem)" : "calc(100% - 6rem)",
           }}
         >
-          <Grid container spacing={10}>
-            <Grid item xs={4}>
+          <Grid container spacing={downLg ? 1 : 10}>
+            <Grid item xs={4} lg={4}>
               <Box onClick={() => dispatch(setOpenModalCasa())}>
                 <HeaderCards
                   idx={0}
                   content={"CASA"}
-                  icon={<HomeOutlinedIcon sx={{ fontSize: "4rem" }} />}
+                  icon={
+                    <HomeOutlinedIcon
+                      sx={{ fontSize: "4rem" }}
+                    />
+                  }
                   subtitle={"Adicionar nova atividade"}
                   className_={"icon-container"}
                   index="0"
@@ -298,6 +355,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                   showAddIcon={showAddIcon}
                   containerDecoration={
                     <Box
+                      className="casaCard"
                       id="0"
                       component={"span"}
                       sx={{
@@ -317,15 +375,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                           " width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ",
                       }}
                     >
-                      <Box sx={{ transform: "rotate(320deg)", ml: 1 }}>
-                        {showAddIcon[0] && <AddToPhotosIcon />}
-                      </Box>
+                      {!downLg && (
+                        <Box sx={{ transform: "rotate(320deg)", ml: 1 }}>
+                          {showAddIcon[0] && <AddToPhotosIcon />}
+                        </Box>
+                      )}
                     </Box>
                   }
                 />
               </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} lg={4}>
               <Box onClick={() => dispatch(setOpenModalLazer())}>
                 <HeaderCards
                   idx={1}
@@ -337,6 +397,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                   showAddIcon={showAddIcon}
                   containerDecoration={
                     <Box
+                      className="lazerCard"
                       id="1"
                       component={"span"}
                       sx={{
@@ -364,7 +425,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 />
               </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} lg={4}>
               <Box onClick={() => dispatch(setOpenModalEducacao())}>
                 <HeaderCards
                   idx={2}
@@ -376,6 +437,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                   showAddIcon={showAddIcon}
                   containerDecoration={
                     <Box
+                      className="educacaoCard"
                       id="2"
                       component={"span"}
                       sx={{
@@ -447,13 +509,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                     options={barOptions}
                     data={data}
                     height={460}
-                    redraw={
-                      registerLazer.isSuccess ||
-                      registerEducacao.isSuccess ||
-                      registerCasa.isSuccess
-                        ? true
-                        : false
-                    }
+                    redraw={registerCasa.isLoading}
                   />
                   <Stack
                     direction="row"

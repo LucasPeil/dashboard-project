@@ -1,5 +1,5 @@
-import { Box, Paper, Typography } from "@mui/material";
-import React from "react";
+import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
+import React, { useMemo } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import "../index.css";
 import { useTheme } from "@emotion/react";
@@ -28,19 +28,23 @@ const HeaderCards = ({
   const iconAnimationEnd = () => {
     Array.from(headerIcons)[idx]?.classList.remove("icon-shake");
   };
+  const downLg = useMediaQuery(theme.breakpoints.down("lg"));
+  const decorationExpand = {
+    height: "32rem !important",
+    width: "32rem !important",
+    top: "-7.5rem !important",
+    left: "-2.5rem !important",
+    zIndex: -2,
+  };
 
   return (
     <Paper
       onMouseOver={() => {
-        iconAnimation(idx);
-        addCoverEffect(index);
         let showAddIconCopy = [...showAddIcon];
         showAddIconCopy.splice(index, 1, false);
         setShowAddIcon(showAddIconCopy);
       }}
       onMouseOut={() => {
-        iconAnimationEnd();
-        removeCoverEffect(index);
         let showAddIconCopy = [...showAddIcon];
         showAddIconCopy.splice(index, 1, true);
         setShowAddIcon(showAddIconCopy);
@@ -48,9 +52,9 @@ const HeaderCards = ({
       elevation={4}
       sx={{
         position: "relative",
-        mt: 5,
+        mt: downLg ? 3 : 5,
         mx: 4,
-        height: "11rem",
+        height: downLg ? "6rem" : "11rem",
         borderRadius: "1rem",
         boxSizing: "border-box",
         px: "2.5rem",
@@ -63,6 +67,10 @@ const HeaderCards = ({
         /*   color: "white",  */
         "&:hover": {
           // backgroundColor: theme.palette.vividBlue.main,
+          ".casaCard": content == "CASA" && decorationExpand,
+          ".lazerCard": content == "LAZER" && decorationExpand,
+          ".educacaoCard": content == "EDUCAÇÃO" && decorationExpand,
+
           color: "white",
           transform: "scale(105%)",
         },
@@ -72,25 +80,27 @@ const HeaderCards = ({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: downLg ? "center" : "space-between",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography
-            variant="button"
-            sx={{ fontSize: "1.8rem", fontWeight: "bold" }}
+        {!downLg && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            {content}
-          </Typography>
-          <Typography variant="caption" sx={{ fontSize: "0.9rem" }}>
-            {subtitle}
-          </Typography>
-        </Box>
+            <Typography
+              variant="button"
+              sx={{ fontSize: "1.8rem", fontWeight: "bold" }}
+            >
+              {content}
+            </Typography>
+            <Typography variant="caption" sx={{ fontSize: "0.9rem" }}>
+              {subtitle}
+            </Typography>
+          </Box>
+        )}
 
         <Box className="icon">{icon}</Box>
       </Box>
@@ -99,3 +109,18 @@ const HeaderCards = ({
 };
 
 export default HeaderCards;
+
+/*   onMouseOver={() => {
+        iconAnimation(idx);
+        addCoverEffect(index);
+        let showAddIconCopy = [...showAddIcon];
+        showAddIconCopy.splice(index, 1, false);
+        setShowAddIcon(showAddIconCopy);
+      }}
+      onMouseOut={() => {
+        iconAnimationEnd();
+        removeCoverEffect(index);
+        let showAddIconCopy = [...showAddIcon];
+        showAddIconCopy.splice(index, 1, true);
+        setShowAddIcon(showAddIconCopy);
+      }} */

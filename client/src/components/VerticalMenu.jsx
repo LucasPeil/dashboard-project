@@ -19,7 +19,7 @@ const VerticalMenu = ({ open, setOpen }) => {
   const upMd = useMediaQuery(theme.breakpoints.up("md"));
   const upLg = useMediaQuery(theme.breakpoints.up("lg"));
   const location = useLocation();
-
+  const path = location.pathname.split("/")[1];
   const menus = [
     {
       title: "VISÃO GERAL",

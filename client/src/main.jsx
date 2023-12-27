@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 
 import "react-toastify/dist/ReactToastify.css";
+import { Router, Routes } from "react-router-dom";
+import Login from "./components/Login.jsx";
 const theme = createTheme({
   breakpoints: {
     values: {
@@ -54,7 +56,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <Router basename="/">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+          <App />
+        </Router>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

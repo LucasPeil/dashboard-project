@@ -48,7 +48,7 @@ const CasaDashboard = ({ open, setOpen }) => {
   const [prop, setProp] = useState("_id");
   const [filter, setFilter] = useState("");
   const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down("md"));
+  const downLg = useMediaQuery(theme.breakpoints.down("lg"));
   const [categoryCardSelected, setCategoryCardSelected] = useState([
     false,
     false,
@@ -205,7 +205,7 @@ const CasaDashboard = ({ open, setOpen }) => {
               openModal={() => dispatch(setOpenModalCasa())}
             />
             <Stack
-              direction={downMd ? "column" : "row"}
+              direction={downLg ? "column" : "row"}
               spacing={10}
               sx={{
                 mt: 7,

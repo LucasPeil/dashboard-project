@@ -188,6 +188,7 @@ export const casaSlice = createSlice({
         state.register.isSuccess = true;
         state.register.message = action.payload.message;
         state.atividadeCasa = action.payload.atividadeCasa;
+
         state.atividadesCasa.documents.unshift(state.atividadeCasa);
         state.register.isLoading = false;
       })
