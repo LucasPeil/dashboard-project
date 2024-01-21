@@ -7,8 +7,10 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 
 import "react-toastify/dist/ReactToastify.css";
-import { Router, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/Login.jsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
+import Cadastrar from "./components/Cadastrar.jsx";
 const theme = createTheme({
   breakpoints: {
     values: {
@@ -56,12 +58,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Router basename="/">
+        <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/cadastrar" element={<Cadastrar />} />
+            {/*   <Route path="/resetPassword" element={<Login />} /> */}
+            <Route
+              exact
+              path="*"
+              element={
+                <ProtectedRoutes>
+                  <App />
+                </ProtectedRoutes>
+              }
+            />
           </Routes>
-          <App />
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

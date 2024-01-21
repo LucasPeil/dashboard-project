@@ -12,14 +12,33 @@ const initialState = {
   message: "",
 };
 
-export const login = createAsyncThunk("auth/login", async (user, thunkApi) => {
+export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
     return await authService.login(user);
   } catch (error) {
-    const message = error.response.data.message;
-    return thunkApi.rejectWithValue(message);
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
   }
 });
+export const cadastrar = createAsyncThunk(
+  "auth/cadastrar",
+  async (userData, thunkAPI) => {
+    try {
+      return await authService.cadastrarUser(userData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   return await authService.logout();
@@ -27,9 +46,9 @@ export const logout = createAsyncThunk("auth/logout", async () => {
 
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
-  async (newPassword, thunkApi) => {
+  async (newPassword, thunkAPI) => {
     try {
-      const token = thunkApi.getState().auth.user.token;
+      const token = thunkAPI.getState().auth.user.token;
       return await authService.resetPassword(newPassword, token);
     } catch (error) {
       const message =
@@ -51,6 +70,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
+      state.message = "";
     },
   },
   extraReducers: (builder) => {
@@ -61,9 +81,25 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+
+        state.message = action.payload;
+      })
+      .addCase(cadastrar.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(cadastrar.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload.user;
+      })
+      .addCase(cadastrar.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;

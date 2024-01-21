@@ -339,15 +339,12 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
         >
           <Grid container spacing={downLg ? 1 : 10}>
             <Grid item xs={4} lg={4}>
-              <Box onClick={() => dispatch(setOpenModalCasa())}>
+              <Box>
                 <HeaderCards
+                  onClickAction={() => dispatch(setOpenModalCasa())}
                   idx={0}
                   content={"CASA"}
-                  icon={
-                    <HomeOutlinedIcon
-                      sx={{ fontSize: "4rem" }}
-                    />
-                  }
+                  icon={<HomeOutlinedIcon sx={{ fontSize: "4rem" }} />}
                   subtitle={"Adicionar nova atividade"}
                   className_={"icon-container"}
                   index="0"
@@ -386,8 +383,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
               </Box>
             </Grid>
             <Grid item xs={4} lg={4}>
-              <Box onClick={() => dispatch(setOpenModalLazer())}>
+              <Box>
                 <HeaderCards
+                  onClickAction={() => dispatch(setOpenModalLazer())}
                   idx={1}
                   content={"LAZER"}
                   icon={<CelebrationOutlinedIcon sx={{ fontSize: "4rem" }} />}
@@ -426,8 +424,9 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
               </Box>
             </Grid>
             <Grid item xs={4} lg={4}>
-              <Box onClick={() => dispatch(setOpenModalEducacao())}>
+              <Box>
                 <HeaderCards
+                  onClickAction={() => dispatch(setOpenModalEducacao())}
                   idx={2}
                   content={"EDUCAÇÃO"}
                   icon={<SchoolOutlinedIcon sx={{ fontSize: "4rem" }} />}

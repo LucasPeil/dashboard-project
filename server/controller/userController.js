@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
+const User = require("../models/usersModel");
 const dotenv = require("dotenv").config();
 
 const saltRounds = 10;
@@ -13,48 +13,52 @@ const createNewPassword = async (password) => {
 
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  const filter = {};
-
   const userExists = await User.findOne({ username: username, email: email });
   if (userExists) {
     throw new Error("Usuário já existe");
   }
   const hashedPassword = await createNewPassword(password);
+
   const user = await User.create({
     username: username,
     email: email,
     password: hashedPassword,
   });
+
   if (user) {
-    console.log(user);
-    console.log("usuário criado com sucesso!");
+    res.status(200).json({ user, message: "usuário criado com sucesso!" });
+    console.log("Usuário criado com sucesso!");
   } else {
+    res.status(404);
     throw new Error("Dados inválidos");
   }
 });
 
 const login = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
-  const user = await User.findOne({ username: username, email: email }).lean();
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Os campos não foram preenchidos!");
+  }
+  const user = await User.findOne({ email: email }).lean();
   if (user && (await bcrypt.compare(password, user.password))) {
     res.status(201).json({
       _id: user._id,
-      username: username.username,
+      email: user.email,
       token: generateToken(user._id),
       resetPassword: user.resetPassword,
     });
   } else {
-    res.status(404);
-    throw new Error("Usuário ou senha inválidos");
+    res.status(404).json({ message: "Usuário ou senha inválidos" });
   }
 });
 
 const generateToken = (id) => {
-  return jwt.sing({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const resetPassword = asyncHandler(async (req, res) => {
-  const { newPassword } = req.body;
+  const newPassword = req.body;
 
   const hashedPassword = await createNewPassword(newPassword);
   const user = await User.findByIdAndUpdate(
@@ -98,17 +102,15 @@ const getById = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { newPassword, resetPassword, userData } = req.body;
+  const { id } = req.params;
+  const { newPassword, resetPassword } = req.body.userData;
 
   if (resetPassword) {
-    userData.password = await createNewPassword(newPassword);
+    userData.newPassword = await createNewPassword(newPassword);
     userData.resetPassword = false;
   }
-  const { password, ...userDataUpdated } = findByIdAndUpdate(
-    userData._id,
-    userData,
-    { new: true }
-  );
+
+  const { userDataUpdated } = findByIdAndUpdate(id, userData, { new: true });
 
   if (userDataUpdated) {
     res.status(200).json(userDataUpdated);

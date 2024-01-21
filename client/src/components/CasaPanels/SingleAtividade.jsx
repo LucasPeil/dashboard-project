@@ -23,6 +23,9 @@ import { Field, Form, FormikProvider, useFormik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Zoom ref={ref} {...props} />;
+});
 const SingleAtividade = ({
   rowData,
   openSingleAtividade,
@@ -30,9 +33,6 @@ const SingleAtividade = ({
   iconColor,
   isAtividadeEducacao = false,
 }) => {
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Zoom ref={ref} {...props} />;
-  });
   return (
     <Dialog
       open={openSingleAtividade}

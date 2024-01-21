@@ -12,14 +12,17 @@ import MapsHomeWorkOutlinedIcon from "@mui/icons-material/MapsHomeWorkOutlined";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
 const VerticalMenu = ({ open, setOpen }) => {
   const theme = useTheme();
   const downSm = useMediaQuery(theme.breakpoints.down("sm"));
   const upMd = useMediaQuery(theme.breakpoints.up("md"));
   const upLg = useMediaQuery(theme.breakpoints.up("lg"));
   const location = useLocation();
-  const path = location.pathname.split("/")[1];
+  const path = location?.pathname?.split("/")[1];
+  const dispatch = useDispatch();
   const menus = [
     {
       title: "VISÃO GERAL",
@@ -152,6 +155,42 @@ const VerticalMenu = ({ open, setOpen }) => {
           )}
         </NavLink>
       ))}
+
+      <Tooltip
+        title={
+          <Typography sx={{ fontSize: "12px", fontWeight: "bold" }}>
+            LOGOUT
+          </Typography>
+        }
+        placement="right"
+      >
+        <IconButton
+          component={motion.div}
+          sx={{
+            pl: 3,
+            height: "auto",
+            maxHeight: "35px",
+            marginTop: "4rem",
+            borderRadius: "0",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "transparent",
+              borderLeft: open ? "7px solid black" : "5px solid white",
+            },
+          }}
+          onClick={() => dispatch(logout())}
+        >
+          <LogoutIcon
+            fontSize="large"
+            sx={{
+              color: open ? "black" : "white",
+            }}
+          />
+          <Typography component={animated.div} style={menuIsOpen}>
+            LOGOUT
+          </Typography>
+        </IconButton>
+      </Tooltip>
     </Paper>
   );
 };

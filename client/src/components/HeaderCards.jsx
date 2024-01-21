@@ -14,6 +14,7 @@ const HeaderCards = ({
   index,
   setShowAddIcon,
   showAddIcon,
+  onClickAction,
 }) => {
   const theme = useTheme();
   const props = useSpring({
@@ -39,6 +40,7 @@ const HeaderCards = ({
 
   return (
     <Paper
+      onClick={onClickAction}
       onMouseOver={() => {
         let showAddIconCopy = [...showAddIcon];
         showAddIconCopy.splice(index, 1, false);

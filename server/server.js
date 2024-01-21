@@ -12,6 +12,7 @@ connectDb();
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
 app.use(
   bodyParser.urlencoded({
     parameterLimit: 100000,
@@ -19,10 +20,8 @@ app.use(
     extended: true,
   })
 );
-app.use("/teste", (req, res) => {
-  res.status(200).send("Testando");
-});
 
+app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/atividades-casa", require("./routes/atividadesCasaRoutes"));
 app.use("/api/atividades-lazer", require("./routes/atividadesLazerRoutes"));
 app.use(
